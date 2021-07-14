@@ -90,6 +90,7 @@ function private_ParagraphChangesOnSetValue(oParagraph)
 {
 	oParagraph.RecalcInfo.Set_Type_0(pararecalc_0_All);
 	oParagraph.RecalcInfo.Set_Type_0_Spell(pararecalc_0_Spell_All);
+	oParagraph.RecalcInfo.Set_Type_0_Stat(pararecalc_0_Stat_All);
 }
 
 //----------------------------------------------------------------------------------------------------------------------

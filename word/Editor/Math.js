@@ -1788,6 +1788,7 @@ ParaMath.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
 	{
 		this.Paragraph = PRS.Paragraph;
 		this.private_UpdateSpellChecking();
+        this.private_UpdateStatistics();
 	}
 
     var Para         = PRS.Paragraph;
@@ -3466,6 +3467,20 @@ ParaMath.prototype.IsParentEquationPlaceholder = function()
 	}
 
 	return false;
+};
+
+ParaMath.prototype.CheckStatics = function(oSpellCheckerEngine, nDepth)
+{
+	if (true === oSpellCheckerEngine.bWord)
+	{
+		oSpellCheckerEngine.bWord = false;
+		oSpellCheckerEngine.SpellChecker.Add(oSpellCheckerEngine.StartPos, oSpellCheckerEngine.EndPos, oSpellCheckerEngine.sWord, oSpellCheckerEngine.CurLcid, false);
+	}
+};
+
+ParaMath.prototype.Restart_CheckSpelling = function()
+{
+
 };
 
 function MatGetKoeffArgSize(FontSize, ArgSize)

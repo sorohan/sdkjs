@@ -8583,7 +8583,7 @@ CMathContent.prototype.GetTextContent = function(bSelectedText) {
 CMathContent.prototype.CollectDocumentStatistics = function(ParaStats) {
     var Start = 0,
         End   = this.Content.length - 1;
-    if (ParaStats.Stats.isUseSelection)
+    if (ParaStats.isUseSelection)
     {
         Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
         End   = Math.max(this.Selection.StartPos, this.Selection.EndPos);

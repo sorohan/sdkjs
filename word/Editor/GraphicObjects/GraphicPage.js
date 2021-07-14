@@ -199,6 +199,7 @@ CGraphicPage.prototype =
             }  
         }
     },
+    // возможно здесь надо будет добавить функцию Restart_StatCounting
 
     getTableByXY: function(x, y, documentContent)
     {

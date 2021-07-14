@@ -7416,7 +7416,7 @@ background-repeat: no-repeat;\
 		// Меняем тип состояния (на никакое)
 		this.advancedOptionsAction = c_oAscAdvancedOptionsAction.None;
 		// Считаем статистику при открытии документа
-		this.startGetDocInfo();
+		// this.startGetDocInfo();
 	};
 
 	asc_docs_api.prototype.UpdateInterfaceState = function()

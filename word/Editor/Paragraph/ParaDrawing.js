@@ -2842,7 +2842,13 @@ ParaDrawing.prototype.isPointInObject = function(x, y, pageIndex)
 };
 ParaDrawing.prototype.Restart_CheckSpelling = function()
 {
+	console.log("ParaDrawing.prototype.Restart_CheckSpelling");
 	this.GraphicObj && this.GraphicObj.Restart_CheckSpelling && this.GraphicObj.Restart_CheckSpelling();
+};
+ParaDrawing.prototype.Restart_StatCounting = function()
+{
+	console.log("ParaDrawing.prototype.Restart_StatCounting");
+	this.GraphicObj && this.GraphicObj.Restart_StatCounting && this.GraphicObj.Restart_StatCounting();
 };
 /**
  * Проверяем является ли данная автофигура формулой в старом формате

@@ -1550,6 +1550,7 @@ ParaRun.prototype.Add_ToContent = function(Pos, Item, UpdatePosition)
     }
 
     this.private_UpdateSpellChecking();
+    this.private_UpdateStatistics();
 	this.private_UpdateDocumentOutline();
     this.private_UpdateTrackRevisionOnChangeContent(true);
 
@@ -1628,6 +1629,7 @@ ParaRun.prototype.Remove_FromContent = function(Pos, Count, UpdatePosition)
     }
 
     this.private_UpdateSpellChecking();
+    this.private_UpdateStatistics();
 	this.private_UpdateDocumentOutline();
 	this.private_UpdateTrackRevisionOnChangeContent(true);
 
@@ -2676,7 +2678,7 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 {
     var Start = 0,
 		End   = this.Content.length;
-    if (ParaStats.Stats.isUseSelection)
+    if (ParaStats.isUseSelection)
 	{
 		Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
 		End   = Math.max(this.Selection.StartPos, this.Selection.EndPos);
@@ -2700,7 +2702,7 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 			bSymbol = true;
 			bNewWord = true;
 			ParaStats.Word = false;
-			ParaStats.EmptyParagraph = false;
+			ParaStats.Stats.IsEmpty = false;
 		}
 		else if (((para_Text === ItemType || (isMathT && !isSpace)) && false === Item.Is_NBSP()) || (para_PageNum === ItemType || para_PageCount === ItemType))
 		{
@@ -2711,7 +2713,7 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 			bSpace  = false;
 
 			ParaStats.Word           = true;
-			ParaStats.EmptyParagraph = false;
+			ParaStats.Stats.IsEmpty  = false;
 		}
 		else if (((para_Text === ItemType || isMathT) && (true === Item.Is_NBSP() || isSpace)) || para_Space === ItemType || para_Tab === ItemType)
 		{
@@ -2722,6 +2724,8 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 		}
         else if (IsCalcPD && para_Drawing === ItemType)
         {
+
+            //TODO: подумать как здесь быть
             var Content = Item.GetAllDocContents();
             for (var j = 0; j < Content.length; j++)
                 Content[j].CollectDocumentStatistics(ParaStats.Stats);
@@ -2733,6 +2737,19 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 		if (true === bNewWord)
 			ParaStats.Stats.Update_Word();
 	}
+};
+
+ParaRun.prototype.Restart_StatCounting = function()
+{
+    // this.Recalc_CompiledPr(false);
+
+    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
+    {
+        var Item = this.Content[nIndex];
+
+        if (para_Drawing === Item.Type)
+            Item.Restart_StatCounting();
+    }
 };
 
 ParaRun.prototype.Create_FontMap = function(Map)
@@ -3162,6 +3179,7 @@ ParaRun.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
         this.RecalcInfo.Measure = true;
 
         this.private_UpdateSpellChecking();
+        this.private_UpdateStatistics();
     }
 
     // Сначала измеряем элементы (можно вызывать каждый раз, внутри разруливается, чтобы измерялось 1 раз)
@@ -8200,6 +8218,7 @@ ParaRun.prototype.SetPr = function(oTextPr)
 	this.Recalc_CompiledPr(true);
 
 	this.private_UpdateSpellChecking();
+    this.private_UpdateStatistics();
 	this.private_UpdateTrackRevisionOnChangeTextPr(true);
 };
 ParaRun.prototype.Apply_TextPr = function(TextPr, IncFontSize, ApplyToAll)

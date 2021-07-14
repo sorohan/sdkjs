@@ -1005,6 +1005,11 @@ CParagraphContentWithContentBase.prototype.private_UpdateSpellChecking = functio
 		this.Paragraph.RecalcInfo.Set_Type_0_Spell(pararecalc_0_Spell_All);
 	}
 };
+CParagraphContentWithContentBase.prototype.private_UpdateStatistics = function()
+{
+	if (this.Paragraph)
+		this.Paragraph.RecalcInfo.Set_Type_0_Stat(pararecalc_0_Stat_All);
+};
 CParagraphContentWithContentBase.prototype.Is_UseInDocument = function(Id)
 {
     if(this.Paragraph)
@@ -2022,7 +2027,7 @@ CParagraphContentWithParagraphLikeContent.prototype.CollectDocumentStatistics = 
 	{
 		var Start = 0,
 			End   = this.Content.length;
-		if (ParaStats.Stats.isUseSelection)
+		if (ParaStats.isUseSelection)
 		{
 			Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
 			End   = Math.max(this.Selection.StartPos, this.Selection.EndPos) + 1;
@@ -2030,6 +2035,14 @@ CParagraphContentWithParagraphLikeContent.prototype.CollectDocumentStatistics = 
 	}
 		for (var Index = Start; Index < End; Index++)
 			this.Content[Index].CollectDocumentStatistics(ParaStats);
+};
+
+CParagraphContentWithParagraphLikeContent.prototype.Restart_StatCounting = function()
+{
+    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
+    {
+        this.Content[nIndex].Restart_StatCounting();
+    }
 };
 CParagraphContentWithParagraphLikeContent.prototype.Create_FontMap = function(Map)
 {
@@ -2304,6 +2317,7 @@ CParagraphContentWithParagraphLikeContent.prototype.Recalculate_Range = function
     {
         this.Paragraph = PRS.Paragraph;
         this.private_UpdateSpellChecking();
+		this.private_UpdateStatistics();
     }
 
     var CurLine  = PRS.Line - this.StartLine;

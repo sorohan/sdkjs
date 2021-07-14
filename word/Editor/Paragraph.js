@@ -163,6 +163,8 @@ function Paragraph(DrawingDocument, Parent, bFromPresentation)
 
     this.SpellChecker  = new CParaSpellChecker(this);
 
+	this.Statistics = new CParagraphStatistics(this);
+
     this.NearPosArray  = [];
 
     // Добавляем в контент элемент "конец параграфа"
@@ -935,6 +937,7 @@ Paragraph.prototype.Internal_Content_Add = function(Pos, Item, bCorrectPos)
 	}
 
 	this.SpellChecker.Update_OnAdd(this, Pos, Item);
+	this.Statistics.Update_OnAdd(this);
 
 	Item.SetParagraph(this);
 };
@@ -1045,6 +1048,8 @@ Paragraph.prototype.Internal_Content_Remove = function(Pos)
 
 	// Передвинем все метки слов для проверки орфографии
 	this.SpellChecker.Update_OnRemove(this, Pos, 1);
+	// Пометим параграф для пересчета статистики
+	this.Statistics.Update_OnRemove(this);
 };
 /**
  * Удаляем несколько элементов
@@ -1153,6 +1158,8 @@ Paragraph.prototype.Internal_Content_Remove2 = function(Pos, Count)
 
 	// Передвинем все метки слов для проверки орфографии
 	this.SpellChecker.Update_OnRemove(this, Pos, Count);
+	// Пометим параграф для пересчета статистики
+	this.Statistics.Update_OnRemove(this);
 };
 /**
  * Очищаем полностью параграф (включая последний ран)
@@ -11010,52 +11017,92 @@ Paragraph.prototype.Get_CurrentPage_Relative = function()
 };
 Paragraph.prototype.CollectDocumentStatistics = function(Stats, IsCalcPD)
 {
-	if (!Stats.GetWorkingState() || !this.Is_UseInDocument() || this.GetId() === Stats.CurElementId)
-		return;
+	// TODO: скорее всего это будет проверяться в функции старта статистики и здесь это не нужно
+	// if (!Stats.GetWorkingState() || !this.Is_UseInDocument() || this.GetId() === Stats.CurElementId)
+	// 	return;
 	
-	if (!this.IsEmpty())
+	this.Statistics.Reset();
+	var ParaStats = {
+		Stats          : this.Statistics,
+		isUseSelection : Stats.isUseSelection,
+		EmptyParagraph : true,
+		Word           : false,
+		Symbol         : false,
+		Space          : false,
+		NewWord        : false
+	};
+
+	// this.Stats          = Stats;
+	// this.EmptyParagraph = true;
+	// this.Word           = false;
+
+	// this.Symbol  = false;
+	// this.Space   = false;
+	// this.NewWord = false;
+
+	var Start = 0,
+		End   = this.Content.length - 1;
+	if (Stats.isUseSelection)
 	{
-		var ParaStats = new CParagraphStatistics(Stats);
-		var Start = 0,
-			End   = this.Content.length - 1;
-		if (Stats.isUseSelection)
-		{
-			Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
-			End   = Math.max(this.Selection.StartPos, this.Selection.EndPos);
-		}
+		Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
+		End   = Math.max(this.Selection.StartPos, this.Selection.EndPos);
+	}
 
-		for (var Index = Start; Index <= End; Index++)
+	for (var Index = Start; Index <= End; Index++)
+	{
+		var Item = this.Content[Index];
+		if (Item.GetType() === para_Math && Stats.isUseSelection)
 		{
-			var Item = this.Content[Index];
-			if (Item.GetType() === para_Math && Stats.isUseSelection)
-			{
-				Item = Item.CopyContent(true)[0];
-				Stats.isUseSelection = false;
-				Item.CollectDocumentStatistics(ParaStats);
-				Stats.isUseSelection = true;
-			}
-			else
-			{
-				Item.CollectDocumentStatistics(ParaStats, IsCalcPD);
-			}
+			Item = Item.CopyContent(true)[0];
+			Stats.isUseSelection = false;
+			Item.CollectDocumentStatistics(ParaStats);
+			Stats.isUseSelection = true;
 		}
-
-		if (false === ParaStats.EmptyParagraph)
+		else
 		{
-			var oNumPr = this.GetNumPr();
-			if (oNumPr)
-			{
-				var oNum = this.Parent.GetNumbering().GetNum(oNumPr.NumId);
-				if (oNum)
-					oNum.GetLvl(oNumPr.Lvl).CollectDocumentStatistics(Stats);
-			}
-			Stats.Update_Paragraph();
+			Item.CollectDocumentStatistics(ParaStats, IsCalcPD);
 		}
 	}
+
+	if (false === this.Statistics.IsEmpty)
+	{
+		var oNumPr = this.GetNumPr();
+		if (oNumPr)
+		{
+			var oNum = this.Parent.GetNumbering().GetNum(oNumPr.NumId);
+			if (oNum)
+				oNum.GetLvl(oNumPr.Lvl).CollectDocumentStatistics(Stats);
+		}
+		this.Statistics.IsEmpty = false;
+		// TODO: подумать где это лучше оставить
+		// Stats.Update_Paragraph();
+	}
+
+	// TODO: подумать где это лучше оставить здесь или вынести в Document
 	// линии надо считать, даже если параграф пустой
 	if (Stats.LogicDocument.Content.length - 1 !== this.Index)
-		Stats.Update_Line(this.Lines.length);
+	{
+		// это сразу в глобальный объект
+		// Stats.Update_Line(this.Lines.length);
+		// а это в объект параграфа
+		this.Statistics.Update_Line(this.Lines.length);
+	}
 	
+	// TODO: подумать как добавить его в статистику, если это полная статистика по вызову из меню
+	this.RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_None );
+};
+Paragraph.prototype.Restart_StatCounting = function()
+{
+    this.RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
+    
+	// Пока не пойму нужно ли это для статистики
+    // Пересчитываем скомпилированный стиль для самого параграфа и для всех ранов в данном параграфе
+    // this.Recalc_CompiledPr();
+
+    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
+        this.Content[nIndex].Restart_StatCounting();
+
+    this.LogicDocument.Statistics.Add_ParagraphToRecal(this.Get_Id(), this);
 };
 Paragraph.prototype.Get_ParentTextTransform = function()
 {
@@ -16311,6 +16358,16 @@ Paragraph.prototype.asc_getText = function()
 	sText += this.GetText();
 	return sText;
 };
+
+Paragraph.prototype.Internal_CheckStatistic = function()
+{
+	if ( pararecalc_0_Stat_None !== this.RecalcInfo.Recalc_0_Stat_Type )
+	{
+		// посмотреть и обдумать эту функцию, возможно она не нужна и надо просто сделать функцию для добавления параграфа в список тех, что нужно пересчитать
+		if (this === AscCommon.g_oTableId.Get_ById(this.Get_Id()))
+			this.LogicDocument && this.LogicDocument.Statistics.Add_ParagraphToRecal(this.Get_Id(), this);
+	}
+},
 Paragraph.prototype.asc_canAddRefToCaptionText = Paragraph.prototype.CanAddRefAfterSEQ;
 //export
 Paragraph.prototype["asc_getText"]                = Paragraph.prototype.asc_getText;
@@ -16326,6 +16383,9 @@ var pararecalc_0_Spell_Pos  = 1;
 var pararecalc_0_Spell_Lang = 2;
 var pararecalc_0_Spell_None = 3;
 
+var pararecalc_0_Stat_All  = 0;
+var pararecalc_0_Stat_None = 1;
+
 function CParaRecalcInfo()
 {
     this.Recalc_0_Type = pararecalc_0_All;
@@ -16335,6 +16395,7 @@ function CParaRecalcInfo()
         StartPos  : 0,
         EndPos    : 0
     };
+	this.Recalc_0_Stat_Type = pararecalc_0_Stat_All;
 }
 
 CParaRecalcInfo.prototype =
@@ -16371,6 +16432,7 @@ CParaRecalcInfo.prototype =
 
     Update_Spell_OnChange : function(Pos, Count, bAdd)
     {
+		console.log("Paragraph.Update_Spell_OnChange");
         if ( pararecalc_0_Spell_Pos === this.Recalc_0_Spell.Type )
         {
             if ( true === bAdd )
@@ -16400,7 +16462,12 @@ CParaRecalcInfo.prototype =
                 }
             }
         }
-    }
+    },
+
+	Set_Type_0_Stat : function (Type)
+	{
+		this.Recalc_0_Stat_Type = Type;
+	}
 };
 
 function CDocumentBounds(Left, Top, Right, Bottom)
@@ -18066,16 +18133,61 @@ CParagraphRunElements.prototype.CheckClass = function(oClass)
 	}
 };
 
-function CParagraphStatistics(Stats)
+// Класс для подсчета статистики внутри параграфа
+function CParagraphStatistics(Paragraph)
 {
-    this.Stats          = Stats;
-    this.EmptyParagraph = true;
-    this.Word           = false;
+    this.Words           = 0;
+    this.SymbolsWOSpaces = 0;
+    this.SymbolsWhSpaces = 0;
+	this.Lines           = 0;
+	this.ParaId          = null; // или Paragraph.Id;
+	this.RecalcId        = null; // пока не знаю нужен ли мне такой флаг, но скорее всего понадобится
+	this.Paragraph       = Paragraph;
+	this.IsEmpty         = true;
+};
 
-    this.Symbol  = false;
-    this.Space   = false;
-    this.NewWord = false;
-}
+CParagraphStatistics.prototype =
+{
+	Update_OnAdd : function(Paragraph)
+    {
+        var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
+        RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
+    },
+
+    Update_OnRemove : function(Paragraph)
+    {
+        var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
+        RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
+    },
+
+	Update_Word : function(Count)
+    {		
+		this.Words += "undefined" === typeof( Count ) ? 1 : Count;
+    },
+
+    Update_Symbol : function(bSpace)
+    {
+		this.SymbolsWhSpaces++;
+		if (!bSpace)
+			this.SymbolsWOSpaces++;
+    },
+
+	Update_Line : function (Count)
+	{
+		this.Lines += "undefined" === typeof( Count ) ? 1 : Count;
+	},
+
+	Reset : function()
+	{
+		this.Words           = 0;
+		this.SymbolsWOSpaces = 0;
+		this.SymbolsWhSpaces = 0;
+		this.Lines           = 0;
+		this.ParaId          = null; // или Paragraph.Id;
+		this.RecalcId        = null; // пока не знаю нужен ли мне такой флаг, но скорее всего понадобится
+		this.IsEmpty         = true; // подумать над этим флагом
+	}
+};
 
 function CParagraphMinMaxContentWidth()
 {

@@ -107,6 +107,7 @@ CChangesHyperlinkAddItem.prototype.Undo = function()
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	oHyperlink.private_UpdateStatistics();
 };
 CChangesHyperlinkAddItem.prototype.Redo = function()
 {
@@ -118,6 +119,7 @@ CChangesHyperlinkAddItem.prototype.Redo = function()
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	oHyperlink.private_UpdateStatistics()
 };
 CChangesHyperlinkAddItem.prototype.private_WriteItem = function(Writer, Item)
 {
@@ -151,6 +153,8 @@ CChangesHyperlinkAddItem.prototype.Load = function(Color)
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	// не уверен, что здесь нужно
+	oHyperlink.private_UpdateStatistics();
 };
 CChangesHyperlinkAddItem.prototype.IsRelated = function(oChanges)
 {
@@ -184,6 +188,7 @@ CChangesHyperlinkRemoveItem.prototype.Undo = function()
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	oHyperlink.private_UpdateStatistics()
 };
 CChangesHyperlinkRemoveItem.prototype.Redo = function()
 {
@@ -192,6 +197,7 @@ CChangesHyperlinkRemoveItem.prototype.Redo = function()
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	oHyperlink.private_UpdateStatistics()
 };
 CChangesHyperlinkRemoveItem.prototype.private_WriteItem = function(Writer, Item)
 {
@@ -217,6 +223,8 @@ CChangesHyperlinkRemoveItem.prototype.Load = function(Color)
 	oHyperlink.private_UpdateTrackRevisions();
 	oHyperlink.private_CheckUpdateBookmarks(this.Items);
 	oHyperlink.private_UpdateSpellChecking();
+	// не уверен, что здесь нужно
+	oHyperlink.private_UpdateStatistics();
 };
 CChangesHyperlinkRemoveItem.prototype.IsRelated = function(oChanges)
 {

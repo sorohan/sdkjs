@@ -1353,13 +1353,14 @@ function CStatistics(LogicDocument)
 {
     this.LogicDocument  = LogicDocument;
     this.Api            = LogicDocument.Get_Api();
-	this.IsWorking      = true;
-	this.isUseSelection = false; // для статистики по селекту
+	this.IsWorking      = true; // флаг, запущена ли статистика
+	this.isUseSelection = false; // флаг для статистики по селекту
 
     this.Id       = null; // Id таймера для подсчета всего кроме страниц
     this.PagesId  = null; // Id таймера для подсчета страниц
 
 	this.bAdd = false; // флаг, указывающий добавляем или вычитаем из статистики объекты
+	this.ChangedPara = {}; // параграфы, в которых были изменения и их нужно заного пересчитать
 
     this.Pages           = 0;
     this.Words           = 0;
@@ -1391,7 +1392,7 @@ CStatistics.prototype =
         // this.Send();
     },
 
-	Refresh : function ()
+	Reset : function ()
 	{
 		this.Pages           = 0;
         this.Words           = 0;
@@ -1399,8 +1400,6 @@ CStatistics.prototype =
         this.SymbolsWOSpaces = 0;
         this.SymbolsWhSpaces = 0;
 		this.Lines           = 0;
-
-		var LogicDocument = this.LogicDocument;
 	},
 
 	Off : function ()
@@ -1418,6 +1417,55 @@ CStatistics.prototype =
 		return this.IsWorking;
 	},
 
+	ContinueStatCounting : function ()
+	{
+		if (false == this.IsWorking)
+            return;
+        
+		for (var sId in this.ChangedPara)
+		{
+			var oParagraph = this.ChangedPara[sId];
+
+			// сначала вычтем из статистики текущий параграф, затем его пересчитываем и вновь добавляем
+			// TODO: подумать как обработать удаленные параграфы
+			// TODO: продумать как понимать, что это первый запуск статистики или полный и параграфы не нужно вычитать (возможно не разрешать опускать их количество ниже нуля)
+			if (oParagraph.IsUseInDocument())
+			{
+				this.bAdd = false;
+				this.UpdateByParagraph(oParagraph);
+				// если просто удалили или добавили что-то к параграфу, то не меняем количество параграфов
+				if (oParagraph.Statistics.IsEmpty && !oParagraph.IsEmpty())
+				{
+					// добавить к числу параграфов
+					this.bAdd = true;
+					this.Update_Paragraph();
+				}
+				else if (!oParagraph.Statistics.IsEmpty && oParagraph.IsEmpty())
+				{
+					// вычесть из числа параграфов
+					this.Update_Paragraph();
+				}
+				oParagraph.CollectDocumentStatistics(this, true);
+				this.bAdd = true;
+				this.UpdateByParagraph(oParagraph);
+	
+
+			}
+			else
+			{
+				// TODO: подумать над этим (возможно здесь будут удалённые параграфы или только что добавленные)
+			}
+
+			// if (oParagraph.IsUseInDocument() && !oParagraph.CollectDocumentStatistics(this, true) )
+			// 	break;
+
+			delete this.ChangedPara[sId];
+		}
+
+		// TODO: Послать сообщение
+		this.Send();
+	},
+
     Next_ParagraphsInfo : function(StartPos)
     {
         this.StartPos = StartPos;
@@ -1425,6 +1473,11 @@ CStatistics.prototype =
         clearTimeout(this.Id);
         this.Id = setTimeout(function(){LogicDocument.Statistics_GetParagraphsInfo();}, 1);
         // this.Send();
+    },
+
+	Add_ParagraphToRecal : function(Id, Para)
+    {
+        this.ChangedPara[Id] = Para;
     },
 
     Next_PagesInfo : function()
@@ -1490,6 +1543,8 @@ CStatistics.prototype =
 			Count = 1;
 		
 		this.Paragraphs += (this.bAdd ? Count : -Count);
+		if (this.Paragraphs < 0)
+			this.Paragraphs = 0;
     },
 
     Update_Word : function(Count)
@@ -1505,10 +1560,18 @@ CStatistics.prototype =
         this.Pages = PagesCount;
     },
 
-    Update_Symbol : function(bSpace)
+    Update_Symbol : function(bSpace, Count)
     {
-		this.SymbolsWhSpaces += this.bAdd ? 1 : -1;
-		this.SymbolsWOSpaces += !bSpace ? this.bAdd ? 1 : -1 : 0;
+		if ("undefined" === typeof( Count ) )
+			Count = 1;
+
+		if (bSpace)
+			this.SymbolsWhSpaces += this.bAdd ? Count : -Count;
+		else
+			this.SymbolsWOSpaces += this.bAdd ? Count : -Count;
+
+		// this.SymbolsWhSpaces += this.bAdd ? Count : -Count;
+		// this.SymbolsWOSpaces += !bSpace ? this.bAdd ? Count : -Count : 0;
     },
 
 	Update_Line : function (Count)
@@ -1517,6 +1580,17 @@ CStatistics.prototype =
 			Count = 1;
 
 		this.Lines += this.bAdd ? Count : -Count;
+	},
+
+	UpdateByParagraph : function (Para)
+	{
+		// if(!Para.IsEmpty())
+		// 	this.Update_Paragraph();
+
+		this.Update_Word(Para.Statistics.Words);
+		this.Update_Line(Para.Statistics.Lines);
+		this.Update_Symbol(true, Para.Statistics.SymbolsWhSpaces);
+		this.Update_Symbol(false, Para.Statistics.SymbolsWOSpaces);
 	}
 };
 
@@ -25494,6 +25568,25 @@ CDocument.prototype.private_ConvertTableToText = function(oTable, oProps)
 	
 	}
 	return ArrNewContent;
+};
+
+CDocument.prototype.Restart_StatCounting = function()
+{
+    this.Statistics.Reset();
+    
+    // TODO: добавить обработку в автофигурах
+    // this.SectionsInfo.Restart_CheckSpelling();
+
+    var Count = this.Content.length;
+    for ( var Index = 0; Index < Count; Index++ )
+    {
+        this.Content[Index].Restart_StatCounting();
+    }
+};
+
+CDocument.prototype.ContinueStatCounting = function()
+{
+    this.Statistics.ContinueStatCounting();
 };
 
 function CDocumentSelectionState()

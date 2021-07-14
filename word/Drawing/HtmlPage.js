@@ -3506,6 +3506,7 @@ function CEditorPage(api)
 		}
 
 		oThis.m_oLogicDocument.ContinueCheckSpelling();
+		oThis.m_oLogicDocument.ContinueStatCounting();
 		oThis.m_oLogicDocument.ContinueTrackRevisions();
 	};
 	this.OnScroll       = function()

@@ -1041,6 +1041,11 @@ CBlockLevelSdt.prototype.CollectDocumentStatistics = function(Stats)
 {
 	return this.Content.CollectDocumentStatistics(Stats);
 };
+CBlockLevelSdt.prototype.Restart_StatCounting = function()
+{
+	console.log("CBlockLevelSdt.prototype.Restart_StatCounting");
+	this.Content.Restart_StatCounting();
+};
 CBlockLevelSdt.prototype.CompareDrawingsLogicPositions = function(CompareObject)
 {
 	return this.Content.CompareDrawingsLogicPositions(CompareObject);
@@ -1567,6 +1572,7 @@ CBlockLevelSdt.prototype.GetContentControlPr = function()
 };
 CBlockLevelSdt.prototype.Restart_CheckSpelling = function()
 {
+	console.log("CBlockLevelSdt.prototype.Restart_CheckSpelling");
 	this.Content.Restart_CheckSpelling();
 };
 CBlockLevelSdt.prototype.ClearContentControl = function()

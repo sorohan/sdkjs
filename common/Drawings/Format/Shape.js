@@ -5849,6 +5849,13 @@ CShape.prototype.Restart_CheckSpelling = function()
     content && content.Restart_CheckSpelling();
 };
 
+CShape.prototype.Restart_StatCounting = function()
+{
+    this.recalcInfo.recalculateShapeStyleForParagraph = true;
+    var content = this.getDocContent();
+    content && content.Restart_StatCounting();
+};
+
 CShape.prototype.Refresh_RecalcData = function (data)
 {
     switch (data.Type)
