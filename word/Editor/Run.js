@@ -1510,20 +1510,20 @@ ParaRun.prototype.Add_ToContent = function(Pos, Item, UpdatePosition)
 		this.Content.splice(Pos, 0, Item);
 	}
 
-    if (true === UpdatePosition)
-        this.private_UpdatePositionsOnAdd(Pos);
+	if (true === UpdatePosition)
+		this.private_UpdatePositionsOnAdd(Pos);
 
-    // Обновляем позиции в NearestPos
-    var NearPosLen = this.NearPosArray.length;
-    for ( var Index = 0; Index < NearPosLen; Index++ )
-    {
-        var RunNearPos = this.NearPosArray[Index];
-        var ContentPos = RunNearPos.NearPos.ContentPos;
-        var Depth      = RunNearPos.Depth;
+	// Обновляем позиции в NearestPos
+	var NearPosLen = this.NearPosArray.length;
+	for ( var Index = 0; Index < NearPosLen; Index++ )
+	{
+		var RunNearPos = this.NearPosArray[Index];
+		var ContentPos = RunNearPos.NearPos.ContentPos;
+		var Depth      = RunNearPos.Depth;
 
-        if ( ContentPos.Data[Depth] >= Pos )
-            ContentPos.Data[Depth]++;
-    }
+		if ( ContentPos.Data[Depth] >= Pos )
+			ContentPos.Data[Depth]++;
+	}
 
 	// Обновляем позиции в поиске
 	var SearchMarksCount = this.SearchMarks.length;
@@ -1537,29 +1537,29 @@ ParaRun.prototype.Add_ToContent = function(Pos, Item, UpdatePosition)
 			ContentPos.Data[Depth]++;
 	}
 
-    // Обновляем позиции для орфографии
-    var SpellingMarksCount = this.SpellingMarks.length;
-    for ( var Index = 0; Index < SpellingMarksCount; Index++ )
-    {
-        var Mark       = this.SpellingMarks[Index];
-        var ContentPos = ( true === Mark.Start ? Mark.Element.StartPos : Mark.Element.EndPos );
-        var Depth      = Mark.Depth;
+	// Обновляем позиции для орфографии
+	var SpellingMarksCount = this.SpellingMarks.length;
+	for ( var Index = 0; Index < SpellingMarksCount; Index++ )
+	{
+		var Mark       = this.SpellingMarks[Index];
+		var ContentPos = ( true === Mark.Start ? Mark.Element.StartPos : Mark.Element.EndPos );
+		var Depth      = Mark.Depth;
 
-        if ( ContentPos.Data[Depth] >= Pos )
-            ContentPos.Data[Depth]++;
-    }
+		if ( ContentPos.Data[Depth] >= Pos )
+			ContentPos.Data[Depth]++;
+	}
 
-    this.private_UpdateSpellChecking();
-    this.private_UpdateStatistics();
+	this.private_UpdateSpellChecking();
+	this.private_UpdateStatistics();
 	this.private_UpdateDocumentOutline();
-    this.private_UpdateTrackRevisionOnChangeContent(true);
+	this.private_UpdateTrackRevisionOnChangeContent(true);
 
     // Обновляем позиции меток совместного редактирования
-    this.CollaborativeMarks.Update_OnAdd( Pos );
+	this.CollaborativeMarks.Update_OnAdd( Pos );
 
-    this.RecalcInfo.OnAdd(Pos);
+	this.RecalcInfo.OnAdd(Pos);
 
-    //if (this.Parent && this.Parent.GetFormKey && this.Parent)
+	//if (this.Parent && this.Parent.GetFormKey && this.Parent)
 };
 
 ParaRun.prototype.Remove_FromContent = function(Pos, Count, UpdatePosition)
@@ -1583,60 +1583,60 @@ ParaRun.prototype.Remove_FromContent = function(Pos, Count, UpdatePosition)
 
 	this.Content.splice(Pos, Count);
 
-    if (true === UpdatePosition)
-        this.private_UpdatePositionsOnRemove(Pos, Count);
+	if (true === UpdatePosition)
+		this.private_UpdatePositionsOnRemove(Pos, Count);
 
 	// Обновляем позиции в NearestPos
-    var NearPosLen = this.NearPosArray.length;
-    for ( var Index = 0; Index < NearPosLen; Index++ )
-    {
-        var RunNearPos = this.NearPosArray[Index];
-        var ContentPos = RunNearPos.NearPos.ContentPos;
-        var Depth      = RunNearPos.Depth;
+	var NearPosLen = this.NearPosArray.length;
+	for ( var Index = 0; Index < NearPosLen; Index++ )
+	{
+		var RunNearPos = this.NearPosArray[Index];
+		var ContentPos = RunNearPos.NearPos.ContentPos;
+		var Depth      = RunNearPos.Depth;
 
-        if ( ContentPos.Data[Depth] > Pos + Count )
-            ContentPos.Data[Depth] -= Count;
-        else if ( ContentPos.Data[Depth] > Pos )
-            ContentPos.Data[Depth] = Math.max( 0 , Pos );
+		if ( ContentPos.Data[Depth] > Pos + Count )
+			ContentPos.Data[Depth] -= Count;
+		else if ( ContentPos.Data[Depth] > Pos )
+			ContentPos.Data[Depth] = Math.max( 0 , Pos );
     }
 
-    // Обновляем позиции в поиске
-    var SearchMarksCount = this.SearchMarks.length;
-    for ( var Index = 0; Index < SearchMarksCount; Index++ )
-    {
-        var Mark       = this.SearchMarks[Index];
-        var ContentPos = ( true === Mark.Start ? Mark.SearchResult.StartPos : Mark.SearchResult.EndPos );
-        var Depth      = Mark.Depth;
+	// Обновляем позиции в поиске
+	var SearchMarksCount = this.SearchMarks.length;
+	for ( var Index = 0; Index < SearchMarksCount; Index++ )
+	{
+		var Mark       = this.SearchMarks[Index];
+		var ContentPos = ( true === Mark.Start ? Mark.SearchResult.StartPos : Mark.SearchResult.EndPos );
+		var Depth      = Mark.Depth;
 
-        if ( ContentPos.Data[Depth] > Pos + Count )
-            ContentPos.Data[Depth] -= Count;
-        else if ( ContentPos.Data[Depth] > Pos )
-            ContentPos.Data[Depth] = Math.max( 0 , Pos );
-    }
+		if ( ContentPos.Data[Depth] > Pos + Count )
+			ContentPos.Data[Depth] -= Count;
+		else if ( ContentPos.Data[Depth] > Pos )
+			ContentPos.Data[Depth] = Math.max( 0 , Pos );
+	}
 
     // Обновляем позиции для орфографии
-    var SpellingMarksCount = this.SpellingMarks.length;
-    for ( var Index = 0; Index < SpellingMarksCount; Index++ )
-    {
-        var Mark       = this.SpellingMarks[Index];
-        var ContentPos = ( true === Mark.Start ? Mark.Element.StartPos : Mark.Element.EndPos );
-        var Depth      = Mark.Depth;
+	var SpellingMarksCount = this.SpellingMarks.length;
+	for ( var Index = 0; Index < SpellingMarksCount; Index++ )
+	{
+		var Mark       = this.SpellingMarks[Index];
+		var ContentPos = ( true === Mark.Start ? Mark.Element.StartPos : Mark.Element.EndPos );
+		var Depth      = Mark.Depth;
 
-        if ( ContentPos.Data[Depth] > Pos + Count )
-            ContentPos.Data[Depth] -= Count;
-        else if ( ContentPos.Data[Depth] > Pos )
-            ContentPos.Data[Depth] = Math.max( 0 , Pos );
-    }
+		if ( ContentPos.Data[Depth] > Pos + Count )
+			ContentPos.Data[Depth] -= Count;
+		else if ( ContentPos.Data[Depth] > Pos )
+			ContentPos.Data[Depth] = Math.max( 0 , Pos );
+	}
 
-    this.private_UpdateSpellChecking();
-    this.private_UpdateStatistics();
+	this.private_UpdateSpellChecking();
+	this.private_UpdateStatistics();
 	this.private_UpdateDocumentOutline();
 	this.private_UpdateTrackRevisionOnChangeContent(true);
 
-    // Обновляем позиции меток совместного редактирования
-    this.CollaborativeMarks.Update_OnRemove( Pos, Count );
+	// Обновляем позиции меток совместного редактирования
+	this.CollaborativeMarks.Update_OnRemove( Pos, Count );
 
-    this.RecalcInfo.OnRemove(Pos, Count);
+	this.RecalcInfo.OnRemove(Pos, Count);
 };
 
 /**
@@ -2676,9 +2676,9 @@ ParaRun.prototype.GetPrevRunElements = function(oRunElements, isUseContentPos, n
 
 ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 {
-    var Start = 0,
+	var Start = 0,
 		End   = this.Content.length;
-    if (ParaStats.isUseSelection)
+	if (ParaStats.isUseSelection)
 	{
 		Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
 		End   = Math.max(this.Selection.StartPos, this.Selection.EndPos);
@@ -2695,8 +2695,8 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 		var bSymbol  = false;
 		var bSpace   = false;
 		var bNewWord = false;
-        // MS каждый иероглиф считает за новое слово
-        var val = Item.Value || Item.value;
+		// MS каждый иероглиф считает за новое слово
+		var val = Item.Value || Item.value;
 		if (AscCommon.isEastAsianScript(val))
 		{
 			bSymbol = true;
@@ -2722,14 +2722,14 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 
 			ParaStats.Word = false;
 		}
-        else if (IsCalcPD && para_Drawing === ItemType)
-        {
+		else if (IsCalcPD && para_Drawing === ItemType)
+		{
 
-            //TODO: подумать как здесь быть
-            var Content = Item.GetAllDocContents();
-            for (var j = 0; j < Content.length; j++)
-                Content[j].CollectDocumentStatistics(ParaStats.Stats);
-        }
+			//TODO: подумать как здесь быть
+			var Content = Item.GetAllDocContents();
+			for (var j = 0; j < Content.length; j++)
+				Content[j].CollectDocumentStatistics(ParaStats.Stats);
+		}
 
 		if (true === bSymbol)
 			ParaStats.Stats.Update_Symbol(bSpace);
@@ -2737,19 +2737,6 @@ ParaRun.prototype.CollectDocumentStatistics = function(ParaStats, IsCalcPD)
 		if (true === bNewWord)
 			ParaStats.Stats.Update_Word();
 	}
-};
-
-ParaRun.prototype.Restart_StatCounting = function()
-{
-    // this.Recalc_CompiledPr(false);
-
-    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
-    {
-        var Item = this.Content[nIndex];
-
-        if (para_Drawing === Item.Type)
-            Item.Restart_StatCounting();
-    }
 };
 
 ParaRun.prototype.Create_FontMap = function(Map)
@@ -3172,15 +3159,15 @@ ParaRun.prototype.Recalculate_Measure2 = function(Metrics)
 
 ParaRun.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
 {
-    if ( this.Paragraph !== PRS.Paragraph )
-    {
-        this.Paragraph = PRS.Paragraph;
-        this.RecalcInfo.TextPr  = true;
-        this.RecalcInfo.Measure = true;
+	if ( this.Paragraph !== PRS.Paragraph )
+	{
+		this.Paragraph = PRS.Paragraph;
+		this.RecalcInfo.TextPr  = true;
+		this.RecalcInfo.Measure = true;
 
-        this.private_UpdateSpellChecking();
-        this.private_UpdateStatistics();
-    }
+		this.private_UpdateSpellChecking();
+		this.private_UpdateStatistics();
+	}
 
     // Сначала измеряем элементы (можно вызывать каждый раз, внутри разруливается, чтобы измерялось 1 раз)
     this.Recalculate_MeasureContent();
@@ -8218,7 +8205,7 @@ ParaRun.prototype.SetPr = function(oTextPr)
 	this.Recalc_CompiledPr(true);
 
 	this.private_UpdateSpellChecking();
-    this.private_UpdateStatistics();
+	this.private_UpdateStatistics();
 	this.private_UpdateTrackRevisionOnChangeTextPr(true);
 };
 ParaRun.prototype.Apply_TextPr = function(TextPr, IncFontSize, ApplyToAll)

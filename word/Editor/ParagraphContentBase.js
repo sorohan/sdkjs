@@ -2036,14 +2036,6 @@ CParagraphContentWithParagraphLikeContent.prototype.CollectDocumentStatistics = 
 		for (var Index = Start; Index < End; Index++)
 			this.Content[Index].CollectDocumentStatistics(ParaStats);
 };
-
-CParagraphContentWithParagraphLikeContent.prototype.Restart_StatCounting = function()
-{
-    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
-    {
-        this.Content[nIndex].Restart_StatCounting();
-    }
-};
 CParagraphContentWithParagraphLikeContent.prototype.Create_FontMap = function(Map)
 {
     var Count = this.Content.length;

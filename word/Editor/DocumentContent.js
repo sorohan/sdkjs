@@ -2054,14 +2054,6 @@ CDocumentContent.prototype.CollectDocumentStatistics = function(Stats)
 		// Stats.Update_Line(Element.Lines.length);
 	}
 };
-CDocumentContent.prototype.Restart_StatCounting = function()
-{
-    var Count = this.Content.length;
-    for ( var Index = 0; Index < Count; Index++ )
-    {
-        this.Content[Index].Restart_StatCounting();
-    }
-};
 CDocumentContent.prototype.Document_CreateFontMap = function(FontMap)
 {
 	var Count = this.Content.length;

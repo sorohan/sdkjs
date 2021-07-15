@@ -1658,7 +1658,7 @@ ParaMath.prototype.Get_Layout = function(DrawingLayout, UseContentPos, ContentPo
 
 ParaMath.prototype.CollectDocumentStatistics = function(ParaStats)
 {
-    this.Root.CollectDocumentStatistics(ParaStats);
+	this.Root.CollectDocumentStatistics(ParaStats);
 };
 
 ParaMath.prototype.Create_FontMap = function(Map)
@@ -1788,7 +1788,7 @@ ParaMath.prototype.Recalculate_Range = function(PRS, ParaPr, Depth)
 	{
 		this.Paragraph = PRS.Paragraph;
 		this.private_UpdateSpellChecking();
-        this.private_UpdateStatistics();
+		this.private_UpdateStatistics();
 	}
 
     var Para         = PRS.Paragraph;

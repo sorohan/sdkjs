@@ -11091,19 +11091,6 @@ Paragraph.prototype.CollectDocumentStatistics = function(Stats, IsCalcPD)
 	// TODO: подумать как добавить его в статистику, если это полная статистика по вызову из меню
 	this.RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_None );
 };
-Paragraph.prototype.Restart_StatCounting = function()
-{
-    this.RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
-    
-	// Пока не пойму нужно ли это для статистики
-    // Пересчитываем скомпилированный стиль для самого параграфа и для всех ранов в данном параграфе
-    // this.Recalc_CompiledPr();
-
-    for (var nIndex = 0, nCount = this.Content.length; nIndex < nCount; nIndex++)
-        this.Content[nIndex].Restart_StatCounting();
-
-    this.LogicDocument.Statistics.Add_ParagraphToRecal(this.Get_Id(), this);
-};
 Paragraph.prototype.Get_ParentTextTransform = function()
 {
 	return this.Parent.Get_ParentTextTransform();
@@ -18136,9 +18123,9 @@ CParagraphRunElements.prototype.CheckClass = function(oClass)
 // Класс для подсчета статистики внутри параграфа
 function CParagraphStatistics(Paragraph)
 {
-    this.Words           = 0;
-    this.SymbolsWOSpaces = 0;
-    this.SymbolsWhSpaces = 0;
+	this.Words           = 0;
+	this.SymbolsWOSpaces = 0;
+	this.SymbolsWhSpaces = 0;
 	this.Lines           = 0;
 	this.ParaId          = null; // или Paragraph.Id;
 	this.RecalcId        = null; // пока не знаю нужен ли мне такой флаг, но скорее всего понадобится
@@ -18149,28 +18136,28 @@ function CParagraphStatistics(Paragraph)
 CParagraphStatistics.prototype =
 {
 	Update_OnAdd : function(Paragraph)
-    {
-        var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
-        RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
-    },
+	{
+		var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
+		RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
+	},
 
-    Update_OnRemove : function(Paragraph)
-    {
-        var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
-        RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
-    },
+	Update_OnRemove : function(Paragraph)
+	{
+		var RecalcInfo = ( undefined !== Paragraph.Paragraph ? Paragraph.Paragraph.RecalcInfo : Paragraph.RecalcInfo );
+		RecalcInfo.Set_Type_0_Stat( pararecalc_0_Stat_All );
+	},
 
 	Update_Word : function(Count)
-    {		
+	{
 		this.Words += "undefined" === typeof( Count ) ? 1 : Count;
-    },
+	},
 
-    Update_Symbol : function(bSpace)
-    {
+	Update_Symbol : function(bSpace)
+	{
 		this.SymbolsWhSpaces++;
 		if (!bSpace)
 			this.SymbolsWOSpaces++;
-    },
+	},
 
 	Update_Line : function (Count)
 	{

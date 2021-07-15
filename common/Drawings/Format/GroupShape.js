@@ -1704,14 +1704,6 @@ function CGroupShape()
         }
     };
 
-    CGroupShape.prototype.Restart_StatCounting = function()
-    {
-        for(var i = 0; i < this.spTree.length; ++i)
-        {
-            this.spTree[i].Restart_StatCounting && this.spTree[i].Restart_StatCounting();
-        }
-    };
-
     CGroupShape.prototype.recalculateLocalTransform =  CShape.prototype.recalculateLocalTransform;
 
     CGroupShape.prototype.bringToFront  = function()//перемещаем заселекченые объекты наверх

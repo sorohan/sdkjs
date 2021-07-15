@@ -1212,10 +1212,6 @@
     {
     };
 
-    CGraphicObjectBase.prototype.Restart_StatCounting = function()
-    {
-    };
-
     CGraphicObjectBase.prototype.GetAllFields = function(isUseSelection, arrFields)
     {
         return arrFields ? arrFields : [];

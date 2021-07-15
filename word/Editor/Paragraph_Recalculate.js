@@ -370,19 +370,19 @@ Paragraph.prototype.RecalculateFastRunRange = function(oParaPos)
         }
     }
 
-    // Во время пересчета сбрасываем привязку курсора к строке.
-    this.CurPos.Line  = -1;
-    this.CurPos.Range = -1;
+	// Во время пересчета сбрасываем привязку курсора к строке.
+	this.CurPos.Line  = -1;
+	this.CurPos.Range = -1;
 
-    this.Internal_CheckSpelling();
-    //посмоотреть может быть попозже добавить вызов (нужно чтобы количество линий пересчиталось)
-    this.Internal_CheckStatistic();
+	this.Internal_CheckSpelling();
+	//посмоотреть может быть попозже добавить вызов (нужно чтобы количество линий пересчиталось)
+	this.Internal_CheckStatistic();
 	this.SetIsRecalculated(true);
 
 	//console.log("Recalc Fast Range");
 
 	this.m_oPRSW.SetFast(false);
-    return this.Get_AbsolutePage(Result);
+	return this.Get_AbsolutePage(Result);
 };
 
 /**
@@ -407,7 +407,7 @@ Paragraph.prototype.Recalculate_Page = function(CurPage)
 
     this.Internal_CheckSpelling();
     //посмоотреть может быть попозже добавить вызов (нужно чтобы количество линий пересчиталось)
-    this.Internal_CheckStatistic();
+	this.Internal_CheckStatistic();
     this.RecalculateEndInfo();
 
     var RecalcResult = this.private_RecalculatePage( CurPage );

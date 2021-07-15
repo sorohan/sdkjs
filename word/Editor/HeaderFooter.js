@@ -1371,10 +1371,6 @@ CHeaderFooter.prototype.GetAllTablesOnPage = function(nPageAbs, arrTables)
 	return this.Content.GetAllTablesOnPage(nPageAbs, arrTables);
 };
 
-CHeaderFooter.prototype.Restart_StatCounting = function()
-{
-
-};
 //-----------------------------------------------------------------------------------
 // Класс для работы с колонтитулами
 //-----------------------------------------------------------------------------------

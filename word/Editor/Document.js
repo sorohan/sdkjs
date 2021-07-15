@@ -1420,8 +1420,8 @@ CStatistics.prototype =
 	ContinueStatCounting : function ()
 	{
 		if (false == this.IsWorking)
-            return;
-        
+			return;
+
 		for (var sId in this.ChangedPara)
 		{
 			var oParagraph = this.ChangedPara[sId];
@@ -1466,102 +1466,102 @@ CStatistics.prototype =
 		this.Send();
 	},
 
-    Next_ParagraphsInfo : function(StartPos)
-    {
-        this.StartPos = StartPos;
-        var LogicDocument = this.LogicDocument;
-        clearTimeout(this.Id);
-        this.Id = setTimeout(function(){LogicDocument.Statistics_GetParagraphsInfo();}, 1);
-        // this.Send();
-    },
+	Next_ParagraphsInfo : function(StartPos)
+	{
+		this.StartPos = StartPos;
+		var LogicDocument = this.LogicDocument;
+		clearTimeout(this.Id);
+		this.Id = setTimeout(function(){LogicDocument.Statistics_GetParagraphsInfo();}, 1);
+		// this.Send();
+	},
 
 	Add_ParagraphToRecal : function(Id, Para)
-    {
-        this.ChangedPara[Id] = Para;
+	{
+		this.ChangedPara[Id] = Para;
+	},
+
+	Next_PagesInfo : function()
+	{
+		var LogicDocument = this.LogicDocument;
+		clearTimeout(this.PagesId);
+		this.PagesId = setTimeout(function(){LogicDocument.Statistics_GetPagesInfo();}, 100);
+		// this.Send();
+	},
+
+	Stop_PagesInfo : function()
+	{
+		if (null !== this.PagesId)
+		{
+			clearTimeout(this.PagesId);
+			this.PagesId = null;
+		}
+
+		this.Check_Stop();
+	},
+
+	Stop_ParagraphsInfo : function()
+	{
+		if (null != this.Id)
+		{
+			clearTimeout(this.Id);
+			this.Id = null;
+		}
+
+		this.Check_Stop();
     },
 
-    Next_PagesInfo : function()
-    {
-        var LogicDocument = this.LogicDocument;
-        clearTimeout(this.PagesId);
-        this.PagesId = setTimeout(function(){LogicDocument.Statistics_GetPagesInfo();}, 100);
-        // this.Send();
-    },
+	Check_Stop : function()
+	{
+		if (null === this.Id && null === this.PagesId)
+		{
+			this.Send();
+			this.Api.sync_GetDocInfoEndCallback();
+		}
+	},
 
-    Stop_PagesInfo : function()
-    {
-        if (null !== this.PagesId)
-        {
-            clearTimeout(this.PagesId);
-            this.PagesId = null;
-        }
-
-        this.Check_Stop();
-    },
-
-    Stop_ParagraphsInfo : function()
-    {
-        if (null != this.Id)
-        {
-            clearTimeout(this.Id);
-            this.Id = null;
-        }
-
-        this.Check_Stop();
-    },
-
-    Check_Stop : function()
-    {
-        if (null === this.Id && null === this.PagesId)
-        {
-            this.Send();
-            this.Api.sync_GetDocInfoEndCallback();
-        }
-    },
-
-    Send : function()
-    {
-        var Stats =
-        {
-            PageCount      : this.Pages,
-            WordsCount     : this.Words,
-            ParagraphCount : this.Paragraphs,
-            SymbolsCount   : this.SymbolsWOSpaces,
-            SymbolsWSCount : this.SymbolsWhSpaces,
+	Send : function()
+	{
+		var Stats =
+		{
+			PageCount      : this.Pages,
+			WordsCount     : this.Words,
+			ParagraphCount : this.Paragraphs,
+			SymbolsCount   : this.SymbolsWOSpaces,
+			SymbolsWSCount : this.SymbolsWhSpaces,
 			LineCount      : this.Lines
-        };
+		};
 		console.log(Stats);
 
-        this.Api.sync_DocInfoCallback(Stats);
-    },
+		this.Api.sync_DocInfoCallback(Stats);
+	},
 //-----------------------------------------------------------------------------------
 // Функции для пополнения статистики
 //-----------------------------------------------------------------------------------
-    Update_Paragraph : function (Count)
-    {
+	Update_Paragraph : function (Count)
+	{
 		if ("undefined" === typeof( Count ) )
 			Count = 1;
 		
 		this.Paragraphs += (this.bAdd ? Count : -Count);
 		if (this.Paragraphs < 0)
 			this.Paragraphs = 0;
-    },
+	},
 
-    Update_Word : function(Count)
-    {
+	Update_Word : function(Count)
+	{
 		if ("undefined" === typeof( Count ) )
 			Count = 1;
-		
+
 		this.Words += (this.bAdd ? Count : -Count);
-    },
+	},
 
-    Update_Pages : function(PagesCount)
-    {
-        this.Pages = PagesCount;
-    },
+	Update_Pages : function(PagesCount)
+	{
+		this.Pages = PagesCount;
+	},
 
-    Update_Symbol : function(bSpace, Count)
-    {
+	Update_Symbol : function(bSpace, Count)
+	{
 		if ("undefined" === typeof( Count ) )
 			Count = 1;
 
@@ -1572,7 +1572,7 @@ CStatistics.prototype =
 
 		// this.SymbolsWhSpaces += this.bAdd ? Count : -Count;
 		// this.SymbolsWOSpaces += !bSpace ? this.bAdd ? Count : -Count : 0;
-    },
+	},
 
 	Update_Line : function (Count)
 	{
@@ -16511,25 +16511,25 @@ CDocument.prototype.Statistics_Stop = function()
 CDocument.prototype.OnSelectStatisticsChange = function()
 {
 	// возможно здесь надо сделать через timeout (чтобы не было задержки для пользователя)
-	if (this.Selection.Use && !this.Selection.Start && !this.IsSelectionEmpty())
-	{
-		var SelectedStatistics = new CStatistics(this);
-		SelectedStatistics.bAdd = true;
-		SelectedStatistics.isUseSelection = true;
-		var Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
-		var End   = Math.max(this.Selection.StartPos, this.Selection.EndPos)
-		for (var i = Start; i <= End; i++)
-			this.Content[i].CollectDocumentStatistics(SelectedStatistics);
+	// if (this.Selection.Use && !this.Selection.Start && !this.IsSelectionEmpty())
+	// {
+	// 	var SelectedStatistics = new CStatistics(this);
+	// 	SelectedStatistics.bAdd = true;
+	// 	SelectedStatistics.isUseSelection = true;
+	// 	var Start = Math.min(this.Selection.StartPos, this.Selection.EndPos);
+	// 	var End   = Math.max(this.Selection.StartPos, this.Selection.EndPos)
+	// 	for (var i = Start; i <= End; i++)
+	// 		this.Content[i].CollectDocumentStatistics(SelectedStatistics);
 
-		// для подсчета количества страниц
-		var bounds = this.GetSelectionBounds();
-		SelectedStatistics.Update_Pages(bounds.End.Page - bounds.Start.Page + 1);
-		// для подсчета символах в графических объектах
-		for (var i = bounds.Start.Page; i <= bounds.End.Page; i++)
-			this.DrawingObjects.documentStatistics(i, SelectedStatistics);
-		// отправить статитстику в интерфейс
-		// console.log(SelectedStatistics);
-	}	
+	// 	// для подсчета количества страниц
+	// 	var bounds = this.GetSelectionBounds();
+	// 	SelectedStatistics.Update_Pages(bounds.End.Page - bounds.Start.Page + 1);
+	// 	// для подсчета символах в графических объектах
+	// 	for (var i = bounds.Start.Page; i <= bounds.End.Page; i++)
+	// 		this.DrawingObjects.documentStatistics(i, SelectedStatistics);
+	// 	// отправить статитстику в интерфейс
+	// 	// console.log(SelectedStatistics);
+	// }	
 };
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -25570,23 +25570,9 @@ CDocument.prototype.private_ConvertTableToText = function(oTable, oProps)
 	return ArrNewContent;
 };
 
-CDocument.prototype.Restart_StatCounting = function()
-{
-    this.Statistics.Reset();
-    
-    // TODO: добавить обработку в автофигурах
-    // this.SectionsInfo.Restart_CheckSpelling();
-
-    var Count = this.Content.length;
-    for ( var Index = 0; Index < Count; Index++ )
-    {
-        this.Content[Index].Restart_StatCounting();
-    }
-};
-
 CDocument.prototype.ContinueStatCounting = function()
 {
-    this.Statistics.ContinueStatCounting();
+	this.Statistics.ContinueStatCounting();
 };
 
 function CDocumentSelectionState()

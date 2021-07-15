@@ -3578,25 +3578,6 @@ CTable.prototype.CollectDocumentStatistics = function(Stats)
 		}
 	}
 };
-CTable.prototype.Restart_StatCounting = function()
-{
-    this.Recalc_CompiledPr();
-
-    var RowsCount = this.Content.length;
-    for ( var CurRow = 0; CurRow < RowsCount; CurRow++ )
-    {
-        var Row = this.Content[CurRow];
-        // Row.Recalc_CompiledPr();
-        var CellsCount = Row.Get_CellsCount();
-
-        for ( var CurCell = 0; CurCell < CellsCount; CurCell++ )
-        {
-            var Cell = Row.Get_Cell(CurCell);
-            // Cell.Recalc_CompiledPr();
-            Cell.Content.Restart_StatCounting();
-        }
-    }
-};
 CTable.prototype.Document_CreateFontMap = function(FontMap)
 {
 	for (var CurRow = 0; CurRow < this.Content.length; CurRow++)
