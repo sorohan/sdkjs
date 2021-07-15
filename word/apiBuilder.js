@@ -1387,19 +1387,6 @@
 			swCell:     SerTableStylePr(oStyle.TableBLCell),
 			wholeTable: SerTableStylePr(oStyle.TableWholeTable)
 		};
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBand1Horz, "band1Horz"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBand1Vert, "band1Vert"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBand2Horz, "band2Horz"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBand2Vert, "band2Vert"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableFirstCol, "firstCol"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableFirstRow, "firstRow"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableLastCol, "lastCol"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableLastRow, "lastRow"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableTRCell, "neCell"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableTLCell, "nwCell"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBRCell, "seCell"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableBLCell, "swCell"));
-		//arrTblStylePr.push(SerTableStylePr(oStyle.TableWholeTable, "wholeTable"));
 
 		return {
 			basedOn:        oStyle.BasedOn,
@@ -1422,7 +1409,7 @@
 			type:           sStyleType
 		}
 	};
-	function SerTableStylePr(oPr, sType)
+	function SerTableStylePr(oPr)
 	{
 		if (!oPr)
 			return oPr;
@@ -1975,6 +1962,164 @@
 			bullet:       SerBullet(oParaPr.Bullet)
 		}
 	};
+	function SerNumbering(oNum)
+	{
+		if (!oNum)
+			return oNum;
+
+		var arrNumLvls     = [];
+		var abtrNumb       = oNum.Numbering.AbstractNum[oNum.AbstractNumId];
+		var arrLvlOverride = [];
+
+		function SerNumLvl(oLvl)
+		{
+			// align
+			var sJc = undefined;
+			switch (oLvl.Jc)
+			{
+				case align_Right:
+					sJc = "end";
+					break;
+				case align_Left:
+					sJc = "start";
+					break;
+				case align_Center:
+					sJc = "center";
+					break;
+				case align_Justify:
+					sJc = "both";
+					break;
+				case align_Distributed:
+					sJc = "distribute";
+					break;
+			}
+
+			// style
+			var oStyle   = oLvl.PStyle ? private_GetLogicDocument().Styles.Get(oLvl.PStyle) : undefined;
+
+			// suff
+			var sSuffType = undefined;
+			switch (oLvl.Suff)
+			{
+				case Asc.c_oAscNumberingSuff.Tab:
+					sSuffType = "tab";
+					break;
+				case Asc.c_oAscNumberingSuff.Space:
+					sSuffType = "space";
+					break;
+				case Asc.c_oAscNumberingSuff.None:
+					sSuffType = "nothing";
+					break;
+			}
+
+			// format type
+			var sFormatType = undefined;
+			switch (oLvl.Format)
+			{
+				case Asc.c_oAscNumberingFormat.Bullet:
+					sFormatType = "bullet";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseCounting:
+					sFormatType = "chineseCounting";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseCountingThousand:
+					sFormatType = "chineseCountingThousand";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseLegalSimplified:
+					sFormatType = "chineseLegalSimplified";
+					break;
+				case Asc.c_oAscNumberingFormat.Decimal:
+					sFormatType = "decimal";
+					break;
+				case Asc.c_oAscNumberingFormat.DecimalEnclosedCircle:
+					sFormatType = "decimalEnclosedCircle";
+					break;
+				case Asc.c_oAscNumberingFormat.DecimalZero:
+					sFormatType = "decimalZero";
+					break;
+				case Asc.c_oAscNumberingFormat.LowerLetter:
+					sFormatType = "lowerLetter";
+					break;
+				case Asc.c_oAscNumberingFormat.LowerRoman:
+					sFormatType = "lowerRoman";
+					break;
+				case Asc.c_oAscNumberingFormat.None:
+					sFormatType = "none";
+					break;
+				case Asc.c_oAscNumberingFormat.RussianLower:
+					sFormatType = "russianLower";
+					break;
+				case Asc.c_oAscNumberingFormat.RussianUpper:
+					sFormatType = "russianUpper";
+					break;
+				case Asc.c_oAscNumberingFormat.UpperLetter:
+					sFormatType = "upperLetter";
+					break;
+				case Asc.c_oAscNumberingFormat.UpperRoman:
+					sFormatType = "upperRoman";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseCounting:
+					sFormatType = "chineseCounting";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseCountingThousand:
+					sFormatType = "chineseCountingThousand";
+					break;
+				case Asc.c_oAscNumberingFormat.ChineseLegalSimplified:
+					sFormatType = "chineseLegalSimplified";
+					break;
+			}
+
+			return {
+				isLgl: oLvl.IsLgl,
+
+				legacy: oLvl.Legacy ? {
+					legacy:       oLvl.Legacy.Legacy,
+					legacyIndent: oLvl.Legacy.Indent,
+					legacySpace:  oLvl.Legacy.Space
+				} : oLvl.Legacy,
+
+				lvlJc:   sJc,
+				lvlText: {
+					val: oLvl.LvlText.length < 2 ? oLvl.LvlText[0].Value : oLvl.LvlText[1].Value
+				},
+				numFmt:  {
+					val: sFormatType
+				},
+				pPr:     SerParaPr(oLvl.ParaPr),
+				pStyle:  SerStyle(oStyle),
+				rPr:     SerTextPr(oLvl.TextPr),
+				start:   oLvl.Start,
+				suff:    sSuffType
+			}
+		}
+
+		// fill arrNumLvls
+		for (var nLvl = 0; nLvl < abtrNumb.Lvl.length; nLvl++)
+			arrNumLvls.push(SerNumLvl(abtrNumb.Lvl[nLvl]));
+
+		// fill arrLvlOverride
+		for (var nOvrd = 0; nOvrd < oNum.LvlOverride.length; nOvrd++)
+		{
+			arrLvlOverride.push({
+				lvl:           SerNumLvl(oNum.LvlOverride[nOvrd]),
+				startOverride: oNum.StartOverride,
+				ilvl:          oNum.LvlOverride[nOvrd].Lvl
+			});
+		}
+		
+		return {
+			abstractNum: {
+				lvl:          arrNumLvls,
+				numStyleLink: oNum.NumStyleLink,
+				styleLink:    oNum.StyleLink
+			},
+			num: {
+				abstractNumId: oNum.AbstractNumId,
+				lvlOverride:   arrLvlOverride,
+				numId:         oNum.Id
+			}
+		}
+	};
 	function SerTabs(oTabs)
 	{
 		if (!oTabs)
@@ -1988,7 +2133,7 @@
 		{
 			oTabsObj.tabs.push({
 				val:    oTabs.Tabs[nTab].Value,
-				pos:    oTabs.Tabs[nTab].Pos,
+				pos:    private_MM2Twips(oTabs.Tabs[nTab].Pos),
 				leader: oTabs.Tabs[nTab].Leader
 			});
 		}
@@ -2058,9 +2203,44 @@
 		if (!oValAx)
 			return oValAx;
 		
+		// axPos
+		var sAxPos = undefined;
+		switch (oValAx.axPos)
+		{
+			case AscFormat.AX_POS_B:
+				sAxPos = "b";
+				break;
+			case AscFormat.AX_POS_L:
+				sAxPos = "l";
+				break;
+			case AscFormat.AX_POS_R:
+				sAxPos = "r";
+				break;
+			case AscFormat.AX_POS_B:
+				sAxPos = "t";
+				break;
+		}
+
+		// TickLblPos
+		var sTickLblPos = undefined;
+		switch (oValAx.tickLblPos)
+		{
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_HIGH:
+				sTickLblPos = "high";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_LOW:
+				sTickLblPos = "low";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NEXT_TO:
+				sTickLblPos = "nextTo";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NONE:
+				sTickLblPos = "none";
+				break;
+		}
 		return {
 			axId:           oValAx.axId,
-			axPos:          oValAx.axPos,
+			axPos:          sAxPos,
 			crossAx:        oValAx.crossAx.axId,
 			crossBetween:   oValAx.crossBetween,
 			crosses:        oValAx.crosses,
@@ -2077,7 +2257,7 @@
 			numFmt:         SerNumFmt(oValAx.numFmt),
 			scaling:        SerScaling(oValAx.scaling),
 			spPr:           SerSpPr(oValAx.spPr),
-			tickLblPos:     oValAx.tickLblPos,
+			tickLblPos:     sTickLblPos,
 			title:          SerTitle(oValAx.title),
 			txPr:           SerTxPr(oValAx.txPr)
 		}
@@ -2117,9 +2297,45 @@
 		if (!oSerAx)
 			return oSerAx;
 
+		// axPos
+		var sAxPos = undefined;
+		switch (oSerAx.axPos)
+		{
+			case AscFormat.AX_POS_B:
+				sAxPos = "b";
+				break;
+			case AscFormat.AX_POS_L:
+				sAxPos = "l";
+				break;
+			case AscFormat.AX_POS_R:
+				sAxPos = "r";
+				break;
+			case AscFormat.AX_POS_B:
+				sAxPos = "t";
+				break;
+		}
+
+		// TickLblPos
+		var sTickLblPos = undefined;
+		switch (oSerAx.tickLblPos)
+		{
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_HIGH:
+				sTickLblPos = "high";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_LOW:
+				sTickLblPos = "low";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NEXT_TO:
+				sTickLblPos = "nextTo";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NONE:
+				sTickLblPos = "none";
+				break;
+		}
+
 		return {
 			axId:           oSerAx.axId,
-			axPos:          oSerAx.axPos,
+			axPos:          sAxPos,
 			crossAx:        oSerAx.crossAx.axId,
 			crosses:        oSerAx.crosses,
 			crossesAt:      oSerAx.crossesAt,
@@ -2132,7 +2348,7 @@
 			numFrm:         SerNumFmt(oSerAx.numFmt),
 			scaling:        SerScaling(oSerAx.scaling),
 			spPr:           SerSpPr(oSerAx.spPr),
-			tickLblPos:     oSerAx.tickLblPos,
+			tickLblPos:     sTickLblPos,
 			tickLblSkip:    oSerAx.tickLblSkip,
 			tickMarkSkip:   oSerAx.tickMarkSkip,
 			title:          SerTitle(oSerAx.title),
@@ -2144,10 +2360,46 @@
 		if (!oCatAx)
 			return oCatAx;
 
+		// axPos
+		var sAxPos = undefined;
+		switch (oCatAx.axPos)
+		{
+			case AscFormat.AX_POS_B:
+				sAxPos = "b";
+				break;
+			case AscFormat.AX_POS_L:
+				sAxPos = "l";
+				break;
+			case AscFormat.AX_POS_R:
+				sAxPos = "r";
+				break;
+			case AscFormat.AX_POS_B:
+				sAxPos = "t";
+				break;
+		}
+
+		// TickLblPos
+		var sTickLblPos = undefined;
+		switch (oCatAx.tickLblPos)
+		{
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_HIGH:
+				sTickLblPos = "high";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_LOW:
+				sTickLblPos = "low";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NEXT_TO:
+				sTickLblPos = "nextTo";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NONE:
+				sTickLblPos = "none";
+				break;
+		}
+
 		return {
 			auto:           oCatAx.auto,
 			axId:           oCatAx.axId,
-			axPos:          oCatAx.axPos,
+			axPos:          sAxPos,
 			crossAx:        oCatAx.crossAx.axId,
 			crosses:        oCatAx.crosses,
 			crossesAt:      oCatAx.crossesAt,
@@ -2163,7 +2415,7 @@
 			numFrm:         SerNumFmt(oCatAx.numFmt),
 			scaling:        SerScaling(oCatAx.scaling),
 			spPr:           SerSpPr(oCatAx.spPr),
-			tickLblPos:     oCatAx.tickLblPos,
+			tickLblPos:     sTickLblPos,
 			tickLblSkip:    oCatAx.tickLblSkip,
 			tickMarkSkip:   oCatAx.tickMarkSkip,
 			title:          SerTitle(oCatAx.title),
@@ -2175,10 +2427,46 @@
 		if (!oDateAx)
 			return oDateAx;
 
+		// axPos
+		var sAxPos = undefined;
+		switch (oDateAx.axPos)
+		{
+			case AscFormat.AX_POS_B:
+				sAxPos = "b";
+				break;
+			case AscFormat.AX_POS_L:
+				sAxPos = "l";
+				break;
+			case AscFormat.AX_POS_R:
+				sAxPos = "r";
+				break;
+			case AscFormat.AX_POS_B:
+				sAxPos = "t";
+				break;
+		}
+
+		// TickLblPos
+		var sTickLblPos = undefined;
+		switch (oDateAx.tickLblPos)
+		{
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_HIGH:
+				sTickLblPos = "high";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_LOW:
+				sTickLblPos = "low";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NEXT_TO:
+				sTickLblPos = "nextTo";
+				break;
+			case Asc.c_oAscTickLabelsPos.TICK_LABEL_POSITION_NONE:
+				sTickLblPos = "none";
+				break;
+		}
+
 		return {
 			auto:           oDateAx.auto,
 			axId:           oDateAx.axId,
-			axPos:          oDateAx.axPos,
+			axPos:          sAxPos,
 			baseTimeUnit:   oDateAx.baseTimeUnit,
 			crossAx:        oDateAx.crossAx.axId,
 			crosses:        oDateAx.crosses,
@@ -2197,7 +2485,7 @@
 			numFrm:         SerNumFmt(oDateAx.numFmt),
 			scaling:        SerScaling(oDateAx.scaling),
 			spPr:           SerSpPr(oDateAx.spPr),
-			tickLblPos:     oDateAx.tickLblPos,
+			tickLblPos:     sTickLblPos,
 			title:          SerTitle(oDateAx.title),
 			txPr:           SerTxPr(oDateAx.txPr)
 		}
@@ -2224,9 +2512,42 @@
 		if (!oDlbl)
 			return oDlbl;
 		
+		// TickLblPos
+		var sDLblPos = undefined;
+		switch (oDlbl.dLblPos)
+		{
+			case Asc.c_oAscChartDataLabelsPos.b:
+				sDLblPos = "b";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.bestFit:
+				sDLblPos = "bestFit";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.ctr:
+				sDLblPos = "ctr";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.inBase:
+				sDLblPos = "inBase";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.inEnd:
+				sDLblPos = "inEnd";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.l:
+				sDLblPos = "l";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.outEnd:
+				sDLblPos = "outEnd";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.r:
+				sDLblPos = "r";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.t:
+				sDLblPos = "t";
+				break;
+		}
+
 		return {
 			delete:         oDlbl.bDelete,
-			dLblPos:        oDlbl.dLblPos,
+			dLblPos:        sDLblPos,
 			idx:            oDlbl.idx,
 			layout:         SerLayout(oDlbl.layout),
 			numFmt:         SerNumFmt(oDlbl.numFmt),
@@ -2247,10 +2568,43 @@
 		if (!dLbls)
 			return dLbls;
 		
+		// TickLblPos
+		var sDLblPos = undefined;
+		switch (dLbls.dLblPos)
+		{
+			case Asc.c_oAscChartDataLabelsPos.b:
+				sDLblPos = "b";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.bestFit:
+				sDLblPos = "bestFit";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.ctr:
+				sDLblPos = "ctr";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.inBase:
+				sDLblPos = "inBase";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.inEnd:
+				sDLblPos = "inEnd";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.l:
+				sDLblPos = "l";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.outEnd:
+				sDLblPos = "outEnd";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.r:
+				sDLblPos = "r";
+				break;
+			case Asc.c_oAscChartDataLabelsPos.t:
+				sDLblPos = "t";
+				break;
+		}
+
 		return {
 			delete:          dLbls.bDelete,
 			dLbl:            dLbls.dLbl,
-			dLblPos:         dLbls.dLblPos,
+			dLblPos:         sDLblPos,
 			leaderLines:     SerSpPr(dLbls.leaderLines),
 			numFmt:          SerNumFmt(dLbls.numFmt),
 			separator:       dLbls.separator,
@@ -2585,6 +2939,26 @@
 		if (!oChartSpace)
 			return oChartSpace;
 
+		var sLegendPos = undefined;
+		switch (oBullet.bulletType)
+		{
+			case Asc.c_oAscChartLegendShowSettings.bottom:
+				sLegendPos = "b";
+				break;
+			case Asc.c_oAscChartLegendShowSettings.left:
+				sLegendPos = "l";
+				break;
+			case Asc.c_oAscChartLegendShowSettings.right:
+				sLegendPos = "r";
+				break;
+			case Asc.c_oAscChartLegendShowSettings.top:
+				sLegendPos = "t";
+				break;
+			case Asc.c_oAscChartLegendShowSettings.topRight:
+				sLegendPos = "tr";
+				break;
+		}
+
 		return {
 			chart: {
 				autoTitleDeleted: oChartSpace.chart.autoTitleDeleted,
@@ -2594,7 +2968,7 @@
 				legend: {
 					layout:      SerLayout(oChartSpace.chart.legend.layout),
 					legendEntry: SerLegendEntries(oChartSpace.chart.legend.legendEntryes),
-					legendPos:   oChartSpace.chart.legend.legendPos,
+					legendPos:   sLegendPos,
 					overlay:     oChartSpace.chart.legend.overlay,
 					spPr:        SerSpPr(oChartSpace.chart.legend.spPr),
 					txPr:        SerTxPr(oChartSpace.chart.legend.txPr)
@@ -2663,6 +3037,7 @@
 		var oRunStyle = oTextPr.RStyle ? private_GetLogicDocument().Styles.Get(oTextPr.RStyle) : undefined;
 		
 		var sVAlign = undefined;
+
 		// alignV
 		if (oTextPr.VAlign)
 		{
@@ -2728,7 +3103,7 @@
 			szCs:      2.0 * oTextPr.FontSizeCS,
 			u:         oTextPr.Underline,
 			vanish:    oTextPr.Vanish,
-			vertAlign: oTextPr.sVAlign,
+			vertAlign: sVAlign,
 			FontRef:   null, /// FontRef, ///???,
 			Unifill:   null ///Unifill /// ???
 		}
@@ -2810,9 +3185,26 @@
 		if (!oParaMath)
 			return oParaMath;
 
+		var sJc = undefined;
+		switch (oParaMath.Jc)
+		{
+			case JC_CENTER:
+				sJc = "center";
+				break;
+			case JC_CENTERGROUP:
+				sJc = "centerGroup";
+				break;
+			case JC_LEFT:
+				sJc = "left";
+				break;
+			case JC_RIGHT:
+				sJc = "right";
+				break;
+		}
+
 		var oMathObject = {
 			oMathParaPr: {
-				jc: oParaMath.Jc
+				jc: sJc
 			},
 			content: SerMathContent(oParaMath.Root),
 			type: "paraMath"
@@ -3109,11 +3501,22 @@
 			if (!oGrpChar)
 				return oGrpChar;
 
+			var sPos = undefined;
+			switch (oGrpChar.Pr.pos)
+			{
+				case LOCATION_BOT:
+					sPos = "bot";
+					break;
+				case LOCATION_TOP:
+					sPos = "top";
+					break;
+			}
+			
 			return {
 				groupChrPr: {
 					chr:    oGrpChar.Pr.chr,
 					ctrlPr: SerTextPr(oGrpChar.CtrPrp),
-					pos:    oGrpChar.Pr.pos,
+					pos:    sPos,
 					vertJc: oGrpChar.Pr.vertJc
 				},
 				e:    SerMathContent(oGrpChar.elements[0][0]),
@@ -3163,11 +3566,22 @@
 		{
 			if (!oBar)
 				return oBar;
-			
+
+			var sPos = undefined;
+			switch (oBar.Pr.pos)
+			{
+				case LOCATION_BOT:
+					sPos = "bot";
+					break;
+				case LOCATION_TOP:
+					sPos = "top";
+					break;
+			}
+
 			return {
 				barPr: {
 					ctrlPr: SerTextPr(oBar.CtrPrp),
-					pos:    oBar.Pr.pos
+					pos:    sPos
 				},
 				e:     SerMathContent(oBar.elements[0][0]),
 				type:  "bar"
@@ -8565,6 +8979,17 @@
 		var oTempElm    = null;
 		var oTempResult = null;
 
+		// numbering
+		var oNumPr           = this.Paragraph.GetNumPr();
+		var oLogicDocument   = private_GetLogicDocument();
+		var oGlobalNumbering = oLogicDocument.GetNumbering();
+		var oNum             = null;
+		if (oNumPr)
+			oNum = oGlobalNumbering.GetNum(oNumPr.NumId);
+
+		if (oNum)
+			oParaObject["numbering"] = SerNumbering(oNum);
+
 		for (var nElm = 0; nElm < this.Paragraph.Content.length; nElm++)
 		{
 			oTempElm = this.Paragraph.Content[nElm];
@@ -11303,6 +11728,16 @@
 
 		return new ApiTableStylePr(sType, this, this.Style.TableWholeTable.Copy());
 	};
+	/**
+	 * Convert to JSON object. 
+	 * @memberof ApiStyle
+	 * @typeofeditors ["CDE"]
+	 * @returns {JSON}
+	 */
+	ApiStyle.prototype.ToJSON = function()
+	{
+		return JSON.stringify(SerStyle(this.Style));
+	};
 
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -11560,6 +11995,16 @@
 	{
 		this.TextPr.Unifill = oApiFill.UniFill;
 		this.private_OnChange();
+	};
+	/**
+	 * Convert to JSON object. 
+	 * @memberof ApiTextPr
+	 * @typeofeditors ["CDE"]
+	 * @returns {JSON}
+	 */
+	ApiTextPr.prototype.ToJSON = function()
+	{
+		return JSON.stringify(SerTextPr(this.TextPr));
 	};
 
 
@@ -12180,7 +12625,16 @@
 		}
 		this.private_OnChange();
 	};
-
+	/**
+	 * Convert to JSON object. 
+	 * @memberof ApiParaPr
+	 * @typeofeditors ["CDE"]
+	 * @returns {JSON}
+	 */
+	ApiParaPr.prototype.ToJSON = function()
+	{
+		return JSON.stringify(SerParaPr(this.ParaPr));
+	};
 
 	//------------------------------------------------------------------------------------------------------------------
 	//
@@ -13073,6 +13527,16 @@
 	ApiTableStylePr.prototype.GetTableCellPr = function()
 	{
 		return new ApiTableCellPr(this, this.TableStylePr.TableCellPr);
+	};
+	/**
+	 * Convert to JSON object. 
+	 * @memberof ApiTableStylePr
+	 * @typeofeditors ["CDE"]
+	 * @returns {JSON}
+	 */
+	ApiTableStylePr.prototype.ToJSON = function()
+	{
+		return JSON.stringify(SerTableStylePr(this.TableStylePr));
 	};
 
 	//------------------------------------------------------------------------------------------------------------------
