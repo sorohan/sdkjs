@@ -49,7 +49,7 @@
 	var arrApiRanges		 = [];
 	function private_RemoveEmptyRanges()
 	{
-		function ckeck_equal(firstDocPos, secondDocPos)
+		function private_ckeckEqualDocPos(firstDocPos, secondDocPos)
 		{
 			if (firstDocPos.length === secondDocPos.length)
 			{
@@ -69,7 +69,7 @@
 		for (var nRange = 0; nRange < arrApiRanges.length; nRange++)
 		{
 			Range = arrApiRanges[nRange];
-			if (ckeck_equal(Range.StartPos, Range.EndPos))
+			if (private_ckeckEqualDocPos(Range.StartPos, Range.EndPos))
 			{
 				Range.isEmpty = true;
 				arrApiRanges.splice(nRange, 1);
@@ -103,6 +103,46 @@
 			Document.RefreshDocumentPositions([Range.StartPos, Range.EndPos]);
 		}
 	};
+	function private_ckeckEqualDocPos(firstDocPos, secondDocPos)
+	{
+		if (firstDocPos.length === secondDocPos.length)
+		{
+			for (var nPos = 0; nPos < firstDocPos.length; nPos++)
+			{
+				if (firstDocPos[nPos].Class === secondDocPos[nPos].Class && firstDocPos[nPos].Position === secondDocPos[nPos].Position)
+					continue;
+				else 
+					return false;
+			}
+			return true;
+		}
+		return false;
+	};
+	/**
+	 * Get the first Run in the array specified.
+	 * @typeofeditors ["CDE"]
+	 * @param {Array} firstPos - first doc pos of element
+	 * @param {Array} secondPos - second doc pos of element
+	 * @return {1 || 0 || - 1}
+	 * If returns 1  -> first element placed before second
+	 * If returns 0  -> first element placed like second
+	 * If returns -1 -> first element placed after second
+	 */
+	function private_checkRelativPos(firstPos, secondPos)
+	{
+		for (var nPos = 0, nLen = Math.min(firstPos.length, secondPos.length); nPos < nLen; ++nPos)
+		{
+			if (!secondPos[nPos] || !firstPos[nPos] || firstPos[nPos].Class !== secondPos[nPos].Class)
+				return 1;
+
+			if (firstPos[nPos].Position < secondPos[nPos].Position)
+				return 1;
+			else if (firstPos[nPos].Position > secondPos[nPos].Position)
+				return -1;
+		}
+
+		return 0;
+	}
 	/**
 	 * Get the first Run in the array specified.
 	 * @typeofeditors ["CDE"]
@@ -193,18 +233,6 @@
 		return arrRuns[max_pos_Index];
 	};
 	
-	// start of serialize functions
-	function SerDocContent(arrContent)
-	{
-		var arrResult = [];
-		for (var nElm  = 0; nElm < arrContent.length; nElm++)
-		{
-			if (arrContent[nElm].IsParagraph())
-				arrResult.push(JSON.parse((new ApiParagraph(arrContent[nElm]).ToJSON())));
-			else if (arrContent[nElm] instanceof AscCommonWord.ParaRun)
-				arrResult.push(JSON.parse((new ApiRun(arrContent[nElm]).ToJSON())));
-		}
-	};
 	function SerHlink(oHlink)
 	{
 		if (!oHlink)
@@ -324,17 +352,17 @@
 				return "none";
 		}
 	};
-	function SerGrapicObject(oGraphicObj)
+	function SerGrapicObject(oGraphicObj, aComplexFieldsToSave)
 	{
 		if (!oGraphicObj)
 			return null;
 
 		if (oGraphicObj.isChart())
-			return SerChartSpace(oGraphicObj);
+			return SerChartSpace(oGraphicObj, aComplexFieldsToSave);
 		if (oGraphicObj.isImage())
-			return SerImage(oGraphicObj);
+			return SerImage(oGraphicObj, aComplexFieldsToSave);
 		if (oGraphicObj.isShape())
-			return SerShape(oGraphicObj);
+			return SerShape(oGraphicObj, aComplexFieldsToSave);
 		
 		return null;
 	};
@@ -1845,7 +1873,7 @@
 			value:      sBorderType
 		}
 	};
-	function SerDocContent(oDocContent)
+	function SerDocContent(oDocContent, aComplexFieldsToSave)
 	{
 		var oDocContentObj = 
 		{
@@ -1853,17 +1881,19 @@
 			type:    "docContent"
 		}
 
+		if (!aComplexFieldsToSave)
+			aComplexFieldsToSave = GetComplexFieldsToSave(oDocContent.Content);
 		var TempElm = null;
 		for (var nElm = 0; nElm < oDocContent.Content.length; nElm++)
 		{
 			TempElm = oDocContent.Content[nElm];
 
 			if (TempElm instanceof AscCommonWord.Paragraph)
-				oDocContentObj["content"].push(JSON.parse(new ApiParagraph(TempElm).ToJSON()));
+				oDocContentObj["content"].push(SerParagraph(TempElm, aComplexFieldsToSave));
 			else if (TempElm instanceof AscCommonWord.CTable)
-				oDocContentObj["content"].push(JSON.parse(new ApiTable(TempElm).ToJSON()));
+				oDocContentObj["content"].push(SerTable(TempElm, aComplexFieldsToSave));
 			else if (TempElm instanceof AscCommonWord.CBlockLevelSdt)
-				oDocContentObj["content"].push(JSON.parse(new ApiBlockLvlSdt(TempElm).ToJSON()));
+				oDocContentObj["content"].push(SerBlockLvlSdt(TempElm, aComplexFieldsToSave));
 		}
 
 		return oDocContentObj;
@@ -1962,6 +1992,486 @@
 			bullet:       SerBullet(oParaPr.Bullet)
 		}
 	};
+	function SerBlockLvlSdt(oSdt, aComplexFieldsToSave)
+	{
+		if (!aComplexFieldsToSave)
+			aComplexFieldsToSave = GetComplexFieldsToSave(oSdt.Content.Content);
+
+		var oBlockSdt = 
+		{
+			sdtPr: SerSdtPr(oSdt.Pr),
+			sdtContent: [],
+			type: "blockSdt"
+		}
+
+		var TempElm = null;
+		for (var nElm = 0; nElm < oSdt.Content.Content.length; nElm++)
+		{
+			TempElm = oSdt.Content.Content[nElm];
+
+			if (TempElm instanceof AscCommonWord.Paragraph)
+				oBlockSdt.sdtContent.push(SerParagraph(TempElm, aComplexFieldsToSave));
+			else if (TempElm instanceof AscCommonWord.CTable)
+				oBlockSdt.sdtContent.push(SerTable(TempElm, aComplexFieldsToSave));
+			else if (TempElm instanceof AscCommonWord.CBlockLevelSdt)
+				oBlockSdt.sdtContent.push(SerBlockLvlSdt(TempElm, aComplexFieldsToSave));
+		}
+
+		return oBlockSdt;
+	};
+	function SerInlineLvlSdt(oSdt, aComplexFieldsToSave)
+	{
+		var oInlineSdt = 
+		{
+			sdtPr: SerSdtPr(oSdt.Pr),
+			content: [],
+			type: "inlineSdt"
+		}
+
+		var TempElm = null;
+		for (var nElm = 0; nElm < oSdt.Content.length; nElm++)
+		{
+			TempElm = oSdt.Content[nElm];
+
+			if (TempElm instanceof AscCommonWord.ParaRun)
+				oInlineSdt.content.push(SerParaRun(TempElm));
+			else if (TempElm instanceof AscCommonWord.ParaHyperlink)
+				oInlineSdt.content.push(SerHyperlink(TempElm));
+			else if (TempElm instanceof AscCommonWord.CInlineLevelSdt)
+				oInlineSdt.content.push(SerInlineLvlSdt(TempElm));
+		}
+
+		return oInlineSdt;
+	};
+	function SerParagraph(oPara, aComplexFieldsToSave)
+	{
+		var oParaObject = {
+			pPr: SerParaPr(oPara.Pr),
+			content: [],
+			type: "paragraph"
+		};
+		
+		if (!aComplexFieldsToSave)
+			aComplexFieldsToSave = GetComplexFieldsToSave([oPara]);
+
+		var oTempElm    = null;
+		var oTempResult = null;
+
+		// numbering
+		var oNumPr           = oPara.GetNumPr();
+		var oLogicDocument   = private_GetLogicDocument();
+		var oGlobalNumbering = oLogicDocument.GetNumbering();
+		var oNum             = null;
+		if (oNumPr)
+			oNum = oGlobalNumbering.GetNum(oNumPr.NumId);
+
+		if (oNum)
+			oParaObject["numbering"] = SerNumbering(oNum);
+
+		for (var nElm = 0; nElm < oPara.Content.length; nElm++)
+		{
+			oTempElm = oPara.Content[nElm];
+			
+			if (oTempElm instanceof AscCommonWord.ParaRun)
+			{
+				var oRunObject = SerParaRun(oTempElm, aComplexFieldsToSave);
+				if (oRunObject.content.length !== 0)
+					oParaObject["content"].push(oRunObject);
+			}
+			else if (oTempElm instanceof AscCommonWord.ParaMath)
+				oParaObject["content"].push(SerParaMath(oTempElm));
+			else if (oTempElm instanceof AscCommonWord.ParaHyperlink)
+				oParaObject["content"].push(SerHyperlink(oTempElm));
+			else if (oTempElm instanceof AscCommon.ParaComment)
+			{
+				oTempResult = SerParaComment(oTempElm);
+				if (oTempResult)
+					oParaObject["content"].push(oTempResult);
+			}
+			else if (oTempElm instanceof AscCommonWord.CParagraphBookmark)
+			{
+				oTempResult = SerParaBookmar(oTempElm);
+				if (oTempResult)
+					oParaObject["content"].push(oTempResult);
+			}
+		}
+
+		return oParaObject;
+	};
+	function SerHyperlink(oHyperlink, aComplexFieldsToSave)
+	{
+		var oLinkObject = {
+			anchor:  this.ParaHyperlink.Anchor,
+			tooltip: this.ParaHyperlink.ToolTip,
+			content: [],
+			type:    "hyperlink"
+		};
+		
+		var oTempElm = null;
+		for (var nElm = 0; nElm < this.ParaHyperlink.Content.length; nElm++)
+		{
+			oTempElm = this.ParaHyperlink.Content[nElm];
+			
+			if (oTempElm instanceof AscCommonWord.ParaRun)
+				oLinkObject.content.push(SerParaRun(oTempElm));
+			else if (oTempElm instanceof AscCommonWord.CInlineLevelSdt)
+				oLinkObject.content.push(SerInlineLvlSdt(oTempElm));
+					
+		}
+
+		return oLinkObject;
+	};
+	function SerParaRun(oRun, aComplexFieldsToSave)
+	{
+		var oRunObject = {
+			rPr:     SerTextPr(oRun.Pr),
+			content: [],
+			type:    "run"
+		}
+		
+		if (!aComplexFieldsToSave)
+		{
+			aComplexFieldsToSave = GetComplexFieldToSave(oRun);
+		}
+			
+		if (oRun.Type === para_Math_Run)
+			oRunObject["mathPr"] = oRun.MathPrp;
+
+		function SerPageNum(oPageNum)
+		{
+			if (!oPageNum)
+				return oPageNum;
+
+			return {
+				type: "pgNum"
+			}
+		};
+		function SerPageCount(oPageCount)
+		{
+			if (!oPageCount)
+				return [];
+
+			return ToComplexField(oPageCount);
+		};
+		function SerCompFieldContent(oContent)
+		{
+			var aResult = [];
+			for (var CurPos = 0; CurPos < oContent.length; CurPos++)
+			{
+				var oItem = oContent[CurPos];
+
+				if (oItem.Type !== para_FieldChar)
+					continue;
+
+				var oCompField  = oItem.GetComplexField();
+				var sInstuction = oCompField.InstructionLine;
+				 
+				if (oItem.IsBegin())
+				{
+					aResult.push({
+						type:        "fldChar",
+						fldCharType: "begin"
+					});
+					aResult.push({
+						type:  "instrText",
+						instr: sInstuction
+					});
+				}
+				else if (oItem.IsSeparate())
+				{
+					aResult.push({
+						type:        "fldChar",
+						fldCharType: "separate"
+					});
+				}
+				else if (oItem.IsEnd())
+				{
+					aResult.push({
+						type:        "fldChar",
+						fldCharType: "end"
+					});
+				}
+			}
+			
+			return aResult;
+		};
+		function ToComplexField(oElement)
+		{
+			var arrComplexFieldRuns = [];
+			var oFldCharBegin = {
+				type:        "fldChar",
+				fldCharType: "begin"
+			}
+			var oFldCharSep   = {
+				type:        "fldChar",
+				fldCharType: "separate"
+			}
+			var oFldCharEnd   = {
+				type:        "fldChar",
+				fldCharType: "end"
+			}
+			var oInstrText    = {
+				type: "instrText"
+			}
+
+			var sResultOfField = "";
+			arrComplexFieldRuns.push(oFldCharBegin);
+			switch (oElement.Type)
+			{
+				case para_PageCount:
+					oInstrText["instr"] = "PAGE";
+					sResultOfField      = oElement.String;
+			}
+			arrComplexFieldRuns.push(oInstrText);
+			arrComplexFieldRuns.push(oFldCharSep);
+			arrComplexFieldRuns.push(sResultOfField);
+			arrComplexFieldRuns.push(oFldCharEnd);
+
+			return arrComplexFieldRuns;
+		};
+		
+		function SerParaNewLine(oParaNewLine)
+		{
+			if (!oParaNewLine)
+				return oParaNewLine;
+				
+			var sBreakType = "";
+			switch (oParaNewLine.BreakType)
+			{
+				case AscCommonWord.break_Line:
+					sBreakType = "textWrapping";
+					break;
+				case AscCommonWord.break_Page:
+					sBreakType = "page";
+					break;
+				case AscCommonWord.break_Column:
+					sBreakType = "column";
+					break;
+			}
+			return {
+				type: "break",
+				breakType: sBreakType
+			}
+		};
+		var ContentLen        = oRun.Content.length;
+		var sTempRunText      = '';
+		var allowAddCompField = false;
+
+		for (var CurPos = 0; CurPos < ContentLen; CurPos++)
+		{
+			var Item     = oRun.Content[CurPos];
+			var ItemType = Item.Type;
+
+			switch (ItemType)
+			{
+				case para_PageNum:
+					oRunObject["content"].push(sTempRunText);
+					oRunObject["content"].push(SerPageNum(Item));
+					sTempRunText = '';
+					break;
+				case para_PageCount:
+					oRunObject["content"].push(sTempRunText);
+					oRunObject["content"] = oRunObject["content"].concat(SerPageCount(Item));
+					sTempRunText = '';
+					break;
+				case para_Drawing:
+				{
+					oRunObject["content"].push(sTempRunText);
+					oRunObject["content"].push(SerDrawing(Item));
+					sTempRunText = '';
+					break;
+				}
+				case para_End:
+				{
+					break;
+				}
+				case para_Text:
+				{
+					sTempRunText += String.fromCharCode(Item.Value);
+					break;
+				}
+				case para_Math_Text:
+				case para_Math_BreakOperator:
+				{
+					sTempRunText += String.fromCharCode(Item.value);
+					break;
+				}
+				case para_NewLine:
+					SerParaNewLine(Item);
+					break;
+				case para_Space:
+				{
+					sTempRunText += " ";
+					break;
+				}
+				case para_Tab:
+					oRunObject["content"].push(sTempRunText);
+					oRunObject["content"].push({
+						type: "tab"
+					});
+					sTempRunText = '';
+					break;
+				case para_FieldChar:
+					var oComplexField    = Item.GetComplexField();
+					var oCurStartPos     = oComplexField.GetStartDocumentPosition();
+					var oCurEndPos       = oComplexField.GetEndDocumentPosition();
+					var oTempStartPos    = null;
+					var oTempEndPos      = null;
+					for (var nCompField = 0; nCompField < aComplexFieldsToSave.length; nCompField++)
+					{
+						oTempStartPos = aComplexFieldsToSave[nCompField].GetStartDocumentPosition();
+						oTempEndPos   = aComplexFieldsToSave[nCompField].GetEndDocumentPosition();
+
+						if (private_checkRelativPos(oCurStartPos, oTempStartPos) === 0 && private_checkRelativPos(oCurEndPos, oTempEndPos) === 0)
+						{
+							allowAddCompField = true;
+							oRunObject["content"] = oRunObject["content"].concat(SerCompFieldContent(oRun.Content));
+							break;
+						}
+					}
+			}
+
+			if (allowAddCompField)
+				break;
+		}
+		if (ContentLen !== 0)
+			oRunObject["content"].push(sTempRunText);
+
+		return oRunObject;
+	};
+	function SerDrawing(oDrawing, aComplexFieldsToSave)
+	{
+		var oDrawingObject = {
+			docPr:          SerDocPr(oDrawing.docPr),
+			effectExtent:   SerEffectExtent(oDrawing.EffectExtent),
+			extent:         SerExtent(oDrawing.Extent),
+			graphic:        SerGrapicObject(oDrawing.GraphicObj, aComplexFieldsToSave),
+			positionH:      SerPosH(oDrawing.PositionH),
+			positionV:      SerPosV(oDrawing.PositionV),
+			simplePos:      SerSimplePos(oDrawing.SimplePos),
+			distB:          oDrawing.Distance ? oDrawing.Distance.B : oDrawing.Distance,
+			distL:          oDrawing.Distance ? oDrawing.Distance.L : oDrawing.Distance,
+			distR:          oDrawing.Distance ? oDrawing.Distance.R : oDrawing.Distance,
+			distT:          oDrawing.Distance ? oDrawing.Distance.T : oDrawing.Distance,
+			allowOverlap:   oDrawing.AllowOverlap,
+			behindDoc:      oDrawing.behindDoc,
+			hidden:         oDrawing.Hidden,
+			layoutInCell:   oDrawing.LayoutInCell,
+			locked:         oDrawing.Locked,
+			relativeHeight: oDrawing.RelativeHeight,
+			wrapType:       GetWrapType(oDrawing.wrappingType),
+			type:           "drawing"
+		};
+
+		return oDrawingObject;
+	};
+	function GetAllParaComplexFields(oPara)
+	{
+		var arrComplexFields = [];
+		var arrTemp          = [];
+		var nEndPos          = oPara.Content.length;
+
+		for (var nIndex = 0; nIndex < nEndPos; nIndex++)
+		{
+			if (oPara.Content[nIndex].GetCurrentComplexFields)
+			{
+				oPara.Content[nIndex].GetCurrentComplexFields(arrTemp);
+				arrComplexFields = arrComplexFields.concat(arrTemp);
+				arrTemp          = [];
+			}
+		}
+
+		return arrComplexFields;
+	};
+	/**
+	 * Get all complex fields to save from content (Takes into account the positions of the beginning and end of fields)
+	 * @param  {Array} arrContent     - array of document content 
+	 * @param  {Array} minStartDocPos - the minimum allowable position not exceeding which we will save the field
+	 * @param  {Array} maxStartDocPos - the maximum allowable position not exceeding which we will save the field
+	 * @return {Array}                - returns array with complex fields to save
+	 */
+	function GetComplexFieldsToSave(arrContent, minStartDocPos, maxStartDocPos)
+	{
+		var oMinStartPos          = minStartDocPos ? minStartDocPos : (arrContent.length !== 0 ? arrContent[0].GetDocumentPositionFromObject() : null);
+		var oMaxStartPos          = maxStartDocPos ? maxStartDocPos : (arrContent.length !== 0 ? arrContent[arrContent.length - 1].GetDocumentPositionFromObject() : null);
+		var arrCompexFieldsToSave = [];
+
+		for (var nElm = 0; nElm < arrContent.length; nElm++)
+		{
+			var oElm                  = arrContent[nElm];
+			var oFieldStartPos        = null;
+			var oFieldEndPos          = null;
+			var arrTemp               = [];
+
+			if (oElm instanceof AscCommonWord.Paragraph)
+			{
+				arrTemp = GetAllParaComplexFields(oElm);
+				for (var nField = 0; nField < arrTemp.length; nField++)
+				{
+					oFieldStartPos = arrTemp[nField].GetStartDocumentPosition();
+					oFieldEndPos   = arrTemp[nField].GetEndDocumentPosition();
+
+					if (private_checkRelativPos(oFieldStartPos, oMinStartPos) === 1 || private_checkRelativPos(oFieldEndPos, oMaxStartPos) === -1)
+					{
+						arrTemp.splice(nField, 1);
+						nField--;
+					}
+				}
+				arrCompexFieldsToSave = arrCompexFieldsToSave.concat(arrTemp);
+			}
+			if (oElm instanceof AscCommonWord.CTable)
+			{
+				var arrElmContent = null;
+				for (var nRow = 0; nRow < oElm.Content.length; nRow++)
+				{
+					for (var nCell = 0; nCell < oElm.Content[nRow].Content.length; nRow++)
+					{
+						arrElmContent         = oElm.Content[nRow].Content[nCell].Content.Content;
+						arrCompexFieldsToSave = arrCompexFieldsToSave.concat(GetComplexFieldsToSave(arrElmContent, minStartDocPos, maxStartDocPos));
+					}
+				}
+			}
+			if (oElm instanceof AscCommonWord.CBlockLevelSdt)
+			{
+				var arrElmContent     = oElm.Content.Content;
+				arrCompexFieldsToSave = arrCompexFieldsToSave.concat(GetComplexFieldsToSave(arrElmContent, minStartDocPos, maxStartDocPos));
+			}
+		}
+
+		return arrCompexFieldsToSave;
+	};
+	function GetComplexFieldToSave(oRun)
+	{
+		var aFieldsToSave = []; 
+		var arrRunContent = oRun.Content;
+		for (var CurPos = 0; CurPos < arrRunContent.length; CurPos++)
+		{
+			var oItem = arrRunContent[CurPos];
+
+			if (oItem.Type !== para_FieldChar)
+				continue;
+
+			var oCompField     = oItem.GetComplexField();
+			var oFieldStartPos = oCompField.GetStartDocumentPosition();
+			var oFieldEndPos   = oCompField.GetEndDocumentPosition();
+			
+			var RunStartPos = oRun.GetDocumentPositionFromObject();
+			var RunEndPos   = oRun.GetDocumentPositionFromObject();
+
+			RunStartPos.push({Class: oRun, Position: 0});
+			RunEndPos.push({Class: oRun, Position: oRun.Content.length});
+
+			if (private_checkRelativPos(oFieldStartPos, RunStartPos) === 1 || private_checkRelativPos(oFieldEndPos, RunEndPos) === -1)
+				break;
+			else
+			{
+				aFieldsToSave.push(oCompField);
+				break;
+			}
+		}
+
+		return aFieldsToSave;
+	};
 	function SerNumbering(oNum)
 	{
 		if (!oNum)
@@ -1971,7 +2481,7 @@
 		var abtrNumb       = oNum.Numbering.AbstractNum[oNum.AbstractNumId];
 		var arrLvlOverride = [];
 
-		function SerNumLvl(oLvl)
+		function SerNumLvl(oLvl, nLvl)
 		{
 			// align
 			var sJc = undefined;
@@ -2089,29 +2599,31 @@
 				pStyle:  SerStyle(oStyle),
 				rPr:     SerTextPr(oLvl.TextPr),
 				start:   oLvl.Start,
-				suff:    sSuffType
+				suff:    sSuffType,
+				ilvl:    nLvl
 			}
 		}
 
 		// fill arrNumLvls
 		for (var nLvl = 0; nLvl < abtrNumb.Lvl.length; nLvl++)
-			arrNumLvls.push(SerNumLvl(abtrNumb.Lvl[nLvl]));
+			arrNumLvls.push(SerNumLvl(abtrNumb.Lvl[nLvl], nLvl));
 
 		// fill arrLvlOverride
 		for (var nOvrd = 0; nOvrd < oNum.LvlOverride.length; nOvrd++)
 		{
 			arrLvlOverride.push({
-				lvl:           SerNumLvl(oNum.LvlOverride[nOvrd]),
-				startOverride: oNum.StartOverride,
+				lvl:           SerNumLvl(oNum.LvlOverride[nOvrd], oNum.LvlOverride[nOvrd].Lvl),
+				startOverride: oNum.LvlOverride[nOvrd].StartOverride,
 				ilvl:          oNum.LvlOverride[nOvrd].Lvl
 			});
 		}
 		
 		return {
 			abstractNum: {
-				lvl:          arrNumLvls,
-				numStyleLink: oNum.NumStyleLink,
-				styleLink:    oNum.StyleLink
+				lvl:           arrNumLvls,
+				numStyleLink:  abtrNumb.NumStyleLink,
+				styleLink:     abtrNumb.StyleLink,
+				abstractNumId: abtrNumb.Id
 			},
 			num: {
 				abstractNumId: oNum.AbstractNumId,
@@ -2917,19 +3429,19 @@
 		
 		return {
 			lnRef:     oStyle.lnRef ? {
-				idx:   oShd.lnRef.idx,
+				idx:   oStyle.lnRef.idx,
 				color: SerColor(oStyle.lnRef.Color)
 			} : oStyle.lnRef,
 			fillRef:   oStyle.fillRef ? {
-				idx:   oShd.fillRef.idx,
+				idx:   oStyle.fillRef.idx,
 				color: SerColor(oStyle.fillRef.Color)
 			} : oStyle.fillRef,
 			effectRef: oStyle.effectRef ? {
-				idx:   oShd.effectRef.idx,
+				idx:   oStyle.effectRef.idx,
 				color: SerColor(oStyle.effectRef.Color)
 			} : oStyle.effectRef,
 			fontRef:   oStyle.fontRef ? {
-				idx:   oShd.fontRef.idx,
+				idx:   oStyle.fontRef.idx,
 				color: SerColor(oStyle.fontRef.Color)
 			} : oStyle.fontRef
 		}
@@ -3008,15 +3520,12 @@
 			type:     "image"
 		}
 	};
-	function SerShape(oShapeObject)
+	function SerShape(oShapeObject, aComplexFieldsToSave)
 	{
 		if (!oShapeObject)
 			return oShapeObject;
 
-		var oContentHolder = textBoxContent || txBody.content.Content;
-		var arrContent     = null;
-		if (oContentHolder)
-			arrContent = oContentHolder.Content;
+		var oContentHolder = oShapeObject.textBoxContent || oShapeObject.txBody.content;
 
 		return {
 			nvSpPr:   SerUniNvPr(oShapeObject.nvSpPr),
@@ -3024,7 +3533,7 @@
 			style:    SerSpStyle(oShapeObject.style),
 			bodyPr:   SerBodyPr(oShapeObject.bodyPr),
 			lstStyle: oShapeObject.txBody ? SerLstStyle(oShapeObject.txBody.lstStyle) : null,
-			content:  SerContent(arrContent),
+			content:  SerDocContent(oContentHolder, aComplexFieldsToSave),
 			type:     "shape"
 		}
 	};
@@ -3080,7 +3589,7 @@
 				val:      oTextPr.Lang.Val
 			} : oTextPr.Lang,
 			outline:   oTextPr.TextOutline,
-			position:  2.0 * private_MM2Pt(oTextPr.Position), /// ???
+			position:  oTextPr.Position ? 2.0 * private_MM2Pt(oTextPr.Position) : oTextPr.Position, /// нужно ли умножать на 2?
 			rFonts:    oTextPr.RFonts ? {
 				ascii: oTextPr.RFonts.Ascii,
 				asciiTheme: oTextPr.RFonts.AsciiTheme,
@@ -3097,10 +3606,10 @@
 			rtl:       oTextPr.RTL,
 			shd:       SerShd(oTextPr.Shd),
 			smallCaps: oTextPr.SmallCaps,
-			spacing:   private_MM2Twips(oTextPr.Spacing),
+			spacing:   oTextPr.Spacing ? private_MM2Twips(oTextPr.Spacing) : oTextPr.Spacing,
 			strike:    oTextPr.Strikeout,
-			sz:        2.0 * oTextPr.FontSize,
-			szCs:      2.0 * oTextPr.FontSizeCS,
+			sz:        oTextPr.FontSize ? 2.0 * oTextPr.FontSize : oTextPr.FontSize,
+			szCs:      oTextPr.FontSizeCS ? 2.0 * oTextPr.FontSizeCS : oTextPr.FontSizeCS,
 			u:         oTextPr.Underline,
 			vanish:    oTextPr.Vanish,
 			vertAlign: sVAlign,
@@ -3226,7 +3735,7 @@
 				{
 					oTempElm = oMathContent.Content[nElm];
 					if (oTempElm instanceof AscCommonWord.ParaRun)
-						arrContent.push(JSON.parse(new ApiRun(oTempElm).ToJSON()));
+						arrContent.push(SerParaRun(oTempElm));
 					else if (oTempElm instanceof AscCommonWord.CFraction)
 						arrContent.push(SerFraction(oTempElm));
 					else if (oTempElm instanceof AscCommonWord.CDegree)
@@ -3921,27 +4430,11 @@
 	};
 	ApiRange.prototype.private_RemoveEqual = function()
 	{
-		function ckeck_equal(firstDocPos, secondDocPos)
-		{
-			if (firstDocPos.length === secondDocPos.length)
-			{
-				for (var nPos = 0; nPos < firstDocPos.length; nPos++)
-				{
-					if (firstDocPos[nPos].Class === secondDocPos[nPos].Class && firstDocPos[nPos].Position === secondDocPos[nPos].Position)
-						continue;
-					else 
-						return false;
-				}
-				return true;
-			}
-			return false;
-		};
-
 		var Range = null;
 		for (var nRange = 0; nRange < arrApiRanges.length - 1; nRange++)
 		{
 			Range = arrApiRanges[nRange];
-			if (ckeck_equal(this.StartPos, Range.StartPos) && ckeck_equal(this.EndPos, Range.EndPos))
+			if (private_ckeckEqualDocPos(this.StartPos, Range.StartPos) && private_ckeckEqualDocPos(this.EndPos, Range.EndPos))
 			{
 				arrApiRanges.splice(nRange, 1);
 				nRange--;
@@ -4279,31 +4772,15 @@
 		if (this.Controller !== oRange.Controller)
 			return null;
 
-		function check_pos(firstPos, secondPos)
-		{
-			for (var nPos = 0, nLen = Math.min(firstPos.length, secondPos.length); nPos < nLen; ++nPos)
-			{
-				if (!secondPos[nPos] || !firstPos[nPos] || firstPos[nPos].Class !== secondPos[nPos].Class)
-					return 1;
-
-				if (firstPos[nPos].Position < secondPos[nPos].Position)
-					return 1;
-				else if (firstPos[nPos].Position > secondPos[nPos].Position)
-					return -1;
-			}
-
-			return 1;
-		}
-		
 		var newRangeStartPos	= null;
 		var newRangeEndPos		= null;
 
-		if (check_pos(firstStartPos, secondStartPos) === 1)
+		if (private_checkRelativPos(firstStartPos, secondStartPos) === 1)
 			newRangeStartPos = firstStartPos;
 		else 
 			newRangeStartPos = secondStartPos;
 
-		if (check_pos(firstEndPos, secondEndPos) === 1)
+		if (private_checkRelativPos(firstEndPos, secondEndPos) === 1)
 			newRangeEndPos = secondEndPos;
 		else 
 			newRangeEndPos = firstEndPos;
@@ -5598,26 +6075,7 @@
 	 */
 	ApiHyperlink.prototype.ToJSON = function()
 	{
-		var oLinkObject = {
-			anchor:  this.ParaHyperlink.Anchor,
-			tooltip: this.ParaHyperlink.ToolTip,
-			content: [],
-			type:    "hyperlink"
-		};
-		
-		var oTempElm = null;
-		for (var nElm = 0; nElm < this.ParaHyperlink.Content.length; nElm++)
-		{
-			oTempElm = this.ParaHyperlink.Content[nElm];
-			
-			if (oTempElm instanceof AscCommonWord.ParaRun)
-				oLinkObject.content.push(JSON.parse(new ApiRun(oTempElm).ToJSON()));
-			else if (oTempElm instanceof AscCommonWord.CInlineLevelSdt)
-				oLinkObject.content.push(JSON.parse(new ApiInlineLvlSdt(oTempElm).ToJSON()));
-					
-		}
-
-		return JSON.stringify(oLinkObject);
+		return JSON.stringify(SerHyperlink(this.ParaHyperlink));
 	};
 
 	/**
@@ -8970,55 +9428,7 @@
 	 */
 	ApiParagraph.prototype.ToJSON = function()
 	{
-		var oParaObject = {
-			pPr: SerParaPr(this.Paragraph.Pr),
-			content: [],
-			type: "paragraph"
-		};
-		
-		var oTempElm    = null;
-		var oTempResult = null;
-
-		// numbering
-		var oNumPr           = this.Paragraph.GetNumPr();
-		var oLogicDocument   = private_GetLogicDocument();
-		var oGlobalNumbering = oLogicDocument.GetNumbering();
-		var oNum             = null;
-		if (oNumPr)
-			oNum = oGlobalNumbering.GetNum(oNumPr.NumId);
-
-		if (oNum)
-			oParaObject["numbering"] = SerNumbering(oNum);
-
-		for (var nElm = 0; nElm < this.Paragraph.Content.length; nElm++)
-		{
-			oTempElm = this.Paragraph.Content[nElm];
-			
-			if (oTempElm instanceof AscCommonWord.ParaRun)
-			{
-				var oRunObject = JSON.parse(new ApiRun(oTempElm).ToJSON());
-				if (oRunObject.content.length !== 0)
-					oParaObject["content"].push(oRunObject);
-			}
-			else if (oTempElm instanceof AscCommonWord.ParaMath)
-				oParaObject["content"].push(SerParaMath(oTempElm));
-			else if (oTempElm instanceof AscCommonWord.ParaHyperlink)
-				oParaObject["content"].push(JSON.parse(new ApiHyperlink(oTempElm).ToJSON()));
-			else if (oTempElm instanceof AscCommon.ParaComment)
-			{
-				oTempResult = SerParaComment(oTempElm);
-				if (oTempResult)
-					oParaObject["content"].push(oTempResult);
-			}
-			else if (oTempElm instanceof AscCommonWord.CParagraphBookmark)
-			{
-				oTempResult = SerParaBookmar(oTempElm);
-				if (oTempResult)
-					oParaObject["content"].push(oTempResult);
-			}
-		}
-
-		return JSON.stringify(oParaObject);
+		return JSON.stringify(SerParagraph(this.Paragraph));
 	};
 	//------------------------------------------------------------------------------------------------------------------
 	//
@@ -9670,151 +10080,7 @@
 	 */
 	ApiRun.prototype.ToJSON = function()
 	{
-		var oRunObject = {
-			rPr:     SerTextPr(this.Run.Pr),
-			content: [],
-			type:    "run"
-		}
-		
-		if (this.Run.Type === para_Math_Run)
-			oRunObject["mathPr"] = this.Run.MathPrp;
-
-		function SerPageNum(oPageNum)
-		{
-			if (!oPageNum)
-				return oPageNum;
-
-			return {
-				type: "pgNum"
-			}
-		};
-		function SerPageCount(oPageCount)
-		{
-			if (!oPageCount)
-				return [];
-
-			return ToComplexField(oPageCount);
-		};
-		function ToComplexField(oElement)
-		{
-			var arrComplexFieldRuns = [];
-			var oFldCharBegin = {
-				type:        "fldChar",
-				fldCharType: "begin"
-			}
-			var oFldCharSep   = {
-				type:        "fldChar",
-				fldCharType: "separate"
-			}
-			var oFldCharEnd   = {
-				type:        "fldChar",
-				fldCharType: "end"
-			}
-			var oInstrText    = {
-				type: "instrText"
-			}
-
-			var sResultOfField = "";
-			arrComplexFieldRuns.push(oFldCharBegin);
-			switch (oElement.Type)
-			{
-				case para_PageCount:
-					oInstrText["instr"] = "PAGE";
-					sResultOfField      = oElement.String;
-			}
-			arrComplexFieldRuns.push(oInstrText);
-			arrComplexFieldRuns.push(oFldCharSep);
-			arrComplexFieldRuns.push(sResultOfField);
-			arrComplexFieldRuns.push(oFldCharEnd);
-
-			return arrComplexFieldRuns;
-		};
-		function SerParaNewLine(oParaNewLine)
-		{
-			if (!oParaNewLine)
-				return oParaNewLine;
-				
-			var sBreakType = "";
-			switch (oParaNewLine.BreakType)
-			{
-				case AscCommonWord.break_Line:
-					sBreakType = "textWrapping";
-					break;
-				case AscCommonWord.break_Page:
-					sBreakType = "page";
-					break;
-				case AscCommonWord.break_Column:
-					sBreakType = "column";
-					break;
-			}
-			return {
-				type: "break",
-				breakType: sBreakType
-			}
-		};
-		var ContentLen        = this.Run.Content.length;
-		var sTempRunText      = '';
-
-		for (var CurPos = 0; CurPos < ContentLen; CurPos++)
-		{
-			var Item     = this.Run.Content[CurPos];
-			var ItemType = Item.Type;
-
-			switch (ItemType)
-			{
-				case para_PageNum:
-					oRunObject["content"].push(sTempRunText);
-					oRunObject["content"].push(SerPageNum(Item));
-					sTempRunText = '';
-					break;
-				case para_PageCount:
-					oRunObject["content"].push(sTempRunText);
-					oRunObject["content"] = oRunObject["content"].concat(SerPageCount(Item));
-					sTempRunText = '';
-					break;
-				case para_Drawing:
-				{
-					oRunObject["content"].push(sTempRunText);
-					oRunObject["content"].push(JSON.parse(new ApiDrawing(Item).ToJSON()))
-					sTempRunText = '';
-					break;
-				}
-				case para_End:
-				{
-					break;
-				}
-				case para_Text:
-				{
-					sTempRunText += String.fromCharCode(Item.Value);
-					break;
-				}
-				case para_Math_Text:
-				case para_Math_BreakOperator:
-				{
-					sTempRunText += String.fromCharCode(Item.value);
-					break;
-				}
-				case para_NewLine:
-					SerParaNewLine(Item);
-					break;
-				case para_Space:
-				{
-					sTempRunText += " ";
-					break;
-				}
-				case para_Tab:
-					oRunObject["content"].push(sTempRunText);
-					oRunObject["content"].push({
-						type: "tab"
-					});
-					sTempRunText = '';
-					break;
-			}
-		}
-		if (ContentLen !== 0)
-			oRunObject["content"].push(sTempRunText);
-
-		return JSON.stringify(oRunObject);
+		return JSON.stringify(SerParaRun(this.Run));
 	};
 	//------------------------------------------------------------------------------------------------------------------
 	//
@@ -12663,6 +12929,16 @@
 	{
 		return new ApiNumberingLevel(this.Num, nLevel);
 	};
+	/**
+	 * Convert to JSON object. 
+	 * @memberof ApiNumbering
+	 * @typeofeditors ["CDE"]
+	 * @returns {JSON}
+	 */
+	ApiNumbering.prototype.ToJSON = function()
+	{
+		return JSON.stringify(SerNumbering(this.Num));
+	};
 
 	//------------------------------------------------------------------------------------------------------------------
 	//
@@ -14073,32 +14349,7 @@
 	 */
 	ApiDrawing.prototype.ToJSON = function()
 	{
-		var oDrawing = this.Drawing;
-		var oDrawingObject = {
-			docPr:          SerDocPr(this.Drawing.docPr),
-			effectExtent:   SerEffectExtent(this.Drawing.EffectExtent),
-			extent:         SerExtent(this.Drawing.Extent),
-			graphic:        SerGrapicObject(this.Drawing.GraphicObj),
-			positionH:      SerPosH(this.Drawing.PositionH),
-			positionV:      SerPosV(this.Drawing.PositionV),
-			simplePos:      SerSimplePos(this.Drawing.SimplePos),
-			distB:          this.Drawing.Distance ? this.Drawing.Distance.B : this.Drawing.Distance,
-			distL:          this.Drawing.Distance ? this.Drawing.Distance.L : this.Drawing.Distance,
-			distR:          this.Drawing.Distance ? this.Drawing.Distance.R : this.Drawing.Distance,
-			distT:          this.Drawing.Distance ? this.Drawing.Distance.T : this.Drawing.Distance,
-			allowOverlap:   this.Drawing.AllowOverlap,
-			behindDoc:      this.Drawing.behindDoc,
-			hidden:         this.Drawing.Hidden,
-			layoutInCell:   this.Drawing.LayoutInCell,
-			locked:         this.Drawing.Locked,
-			relativeHeight: this.Drawing.RelativeHeight,
-			wrapType:       GetWrapType(this.Drawing.wrappingType),
-			type:           "drawing"
-		};
-
-		
-
-		return JSON.stringify(oDrawingObject);
+		return JSON.stringify(SerDrawing(this.Drawing));
 	};
  
 
@@ -15245,27 +15496,7 @@
 	 */
 	ApiInlineLvlSdt.prototype.ToJSON = function()
 	{
-		var oInlineSdt = 
-		{
-			sdtPr: SerSdtPr(this.Sdt.Pr),
-			content: [],
-			type: "inlineSdt"
-		}
-
-		var TempElm = null;
-		for (var nElm = 0; nElm < this.Sdt.Content.length; nElm++)
-		{
-			TempElm = this.Sdt.Content[nElm];
-
-			if (TempElm instanceof AscCommonWord.ParaRun)
-				oInlineSdt.content.push(JSON.parse(new ApiRun(TempElm).ToJSON()));
-			else if (TempElm instanceof AscCommonWord.ParaHyperlink)
-				oInlineSdt.content.push(JSON.parse(new ApiHyperlink(TempElm).ToJSON()));
-			else if (TempElm instanceof AscCommonWord.CInlineLevelSdt)
-				oInlineSdt.content.push(JSON.parse(new ApiInlineLvlSdt(TempElm).ToJSON()));
-		}
-
-		return JSON.stringify(oInlineSdt);
+		return JSON.stringify(this.Sdt);
 	};
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -15743,27 +15974,7 @@
 	 */
 	ApiBlockLvlSdt.prototype.ToJSON = function()
 	{
-		var oBlockSdt = 
-		{
-			sdtPr: SerSdtPr(this.Sdt.Pr),
-			sdtContent: [],
-			type: "blockSdt"
-		}
-
-		var TempElm = null;
-		for (var nElm = 0; nElm < this.Sdt.Content.Content.length; nElm++)
-		{
-			TempElm = this.Sdt.Content.Content[nElm];
-
-			if (TempElm instanceof AscCommonWord.Paragraph)
-				oBlockSdt.sdtContent.push(JSON.parse(new ApiParagraph(TempElm).ToJSON()));
-			else if (TempElm instanceof AscCommonWord.CTable)
-				oBlockSdt.sdtContent.push(JSON.parse(new ApiTable(TempElm).ToJSON()));
-			else if (TempElm instanceof AscCommonWord.CBlockLevelSdt)
-				oBlockSdt.sdtContent.push(JSON.parse(new ApiBlockLvlSdt(TempElm).ToJSON()));
-		}
-
-		return JSON.stringify(oBlockSdt);
+		return JSON.stringify(SerBlockLvlSdt(this.Sdt));
 	};
 
 	/**
