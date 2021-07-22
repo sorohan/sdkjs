@@ -8143,13 +8143,16 @@ ParaRun.prototype.Internal_Compile_Pr = function ()
 
 	var oTheme = this.Paragraph.Get_Theme();
 
-	if (TextPr.TextFill)
-		TextPr.TextFill.check(oTheme, this.Paragraph.Get_ColorMap());
-	else if (TextPr.Unifill)
-		TextPr.Unifill.check(oTheme, this.Paragraph.Get_ColorMap());
+	if (oTheme)
+	{
+		if (TextPr.TextFill)
+			TextPr.TextFill.check(oTheme, this.Paragraph.Get_ColorMap());
+		else if (TextPr.Unifill)
+			TextPr.Unifill.check(oTheme, this.Paragraph.Get_ColorMap());
 
-	TextPr.ReplaceThemeFonts(oTheme.themeElements.fontScheme);
-	TextPr.CheckFontScale();
+		TextPr.ReplaceThemeFonts(oTheme.themeElements.fontScheme);
+		TextPr.CheckFontScale();
+	}
 
 	// Для совместимости со старыми версиями запишем FontFamily
 	TextPr.FontFamily.Name  = TextPr.RFonts.Ascii.Name;
