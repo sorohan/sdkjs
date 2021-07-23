@@ -2827,55 +2827,7 @@ function BinaryPPTYLoader()
             }
             case 24:
             {
-                s.GetLong();
-                s.GetUChar();
-                nRecStart = s.cur;
-                nRecLen = s.GetLong();
-                nRecEnd = nRecStart + nRecLen + 4;
-                oEffect = new AscFormat.CEffectContainer();
-                s.Skip2(1);
-
-                while (true)
-                {
-                    var _at = s.GetUChar();
-                    if (_at == g_nodeAttributeEnd)
-                        break;
-
-                    switch (_at)
-                    {
-                        case 0:
-                            oEffect.name = s.GetString2(); break;
-                        case 1:
-                        {
-                            oEffect.type = (s.GetUChar());
-                        }break;
-                    }
-                }
-                while (s.cur < nRecEnd)
-                {
-                    var _at = s.GetUChar();
-                    switch (_at)
-                    {
-                        case 0:
-                        {
-                            var count_effects2 = s.GetULong();
-                            for (var _eff2 = 0; _eff2 < count_effects2; ++_eff2)
-                            {
-                                s.Skip2(1); // type
-                                var eff2 = this.ReadEffect();
-                                if(!eff2)
-                                {
-                                    oEffect.effectList.push(eff2);
-                                }
-                            }
-                        }break;
-                        default:
-                            break;
-                    }
-                }
-
-
-                s.Seek2(nRecEnd);
+                oEffect = this.ReadEffectDag();
                 break;//var  EFFECT_TYPE_DAG			=
             }
             case 25:
@@ -3114,7 +3066,9 @@ function BinaryPPTYLoader()
         s.GetUChar();
         var _start_pos = s.cur;
         var _end_rec = _start_pos + s.GetLong() + 4;
-        s.Skip(1);
+
+
+        s.Skip2(1);
 
         var ret = new AscFormat.CEffectContainer();
         while (true)
@@ -3135,6 +3089,8 @@ function BinaryPPTYLoader()
                 }
             }
         }
+
+
         while (s.cur < _end_rec)
         {
             var _at = s.GetUChar();
@@ -3142,7 +3098,11 @@ function BinaryPPTYLoader()
             {
                 case 0:
                 {
+                    s.GetULong();//length
+
+                    s.GetUChar();
                     var count_effects = s.GetULong();
+
                     for (var _eff = 0; _eff < count_effects; ++_eff)
                     {
                         s.Skip2(1); // type

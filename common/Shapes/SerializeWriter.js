@@ -2549,11 +2549,11 @@ function CBinaryFileWriter()
         oThis.StartRecord(oEffect.Type);
 
         oThis.WriteUChar(g_nodeAttributeStart);
-        oThis.WriteString2(0, oEffect.name);
+        oThis._WriteString2(0, oEffect.name);
         oThis._WriteLimit2(1, oEffect.type);
         oThis.WriteUChar(g_nodeAttributeEnd);
 
-        oThis.StartRecord(type);
+        oThis.StartRecord(0);
         var len__ = oEffect.effectList.length;
         oThis._WriteInt2(0, len__);
 
@@ -2772,7 +2772,7 @@ function CBinaryFileWriter()
                     oThis.StartRecord(type);
 
                     oThis.WriteUChar(g_nodeAttributeStart);
-                    oThis.WriteString2(0, oEffect.ref);
+                    oThis._WriteString2(0, oEffect.ref);
                     oThis.WriteUChar(g_nodeAttributeEnd);
 
                     oThis.EndRecord();
