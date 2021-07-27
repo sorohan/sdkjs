@@ -915,125 +915,101 @@
 			if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaBiLevel)
 			{
 				oElm = {
-					elm: {
-						thresh: baseArrEffectLst[nEffect].tresh
-					},
-					type: "alphaBiLvl"
+					thresh: baseArrEffectLst[nEffect].tresh,
+					type:   "alphaBiLvl"
 				}
 									
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaCeiling)
 			{
 				oElm = {
-					elm: null,
 					type: "alphaCeiling"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaFloor)
 			{
 				oElm = {
-					elm: null,
 					type: "alphaFloor"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaInv)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].unicolor)
-					},
-					type: "alphaInv"
+					color: SerColor(baseArrEffectLst[nEffect].unicolor),
+					type:  "alphaInv"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaMod)
 			{
 				oElm = {
-					elm: {
-						cont: SerEffectDag(baseArrEffectLst[nEffect].cont)
-					},
+					cont: SerEffectDag(baseArrEffectLst[nEffect].cont),
 					type: "alphaMod"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaModFix)
 			{
 				oElm = {
-					elm: {
-						amt: baseArrEffectLst[nEffect].amt
-					},
+					amt:  baseArrEffectLst[nEffect].amt,
 					type: "alphaModFix"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaOutset)
 			{
 				oElm = {
-					elm: {
-						rad: baseArrEffectLst[nEffect].rad
-					},
+					rad:  baseArrEffectLst[nEffect].rad,
 					type: "alphaOutset"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CAlphaRepl)
 			{
 				oElm = {
-					elm: {
-						a: baseArrEffectLst[nEffect].a
-					},
+					a:     baseArrEffectLst[nEffect].a,
 					type: "alphaRepl"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CBiLevel)
 			{
 				oElm = {
-					elm: {
-						thresh: baseArrEffectLst[nEffect].thresh
-					},
-					type: "biLvl"
+					thresh: baseArrEffectLst[nEffect].thresh,
+					type:   "biLvl"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CBlend)
 			{
 				oElm = {
-					elm: {
-						cont: SerEffectDag(baseArrEffectLst[nEffect].cont),
-						blend: baseArrEffectLst[nEffect].blend
-					},
-					type: "blend"
+					cont:  SerEffectDag(baseArrEffectLst[nEffect].cont),
+					blend: baseArrEffectLst[nEffect].blend,
+					type:  "blend"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CBlur)
 			{
 				oElm = {
-					elm: {
-						grow: baseArrEffectLst[nEffect].grow,
-						rad: baseArrEffectLst[nEffect].rad
-					},
+					grow: baseArrEffectLst[nEffect].grow,
+					rad:  baseArrEffectLst[nEffect].rad,
 					type: "blur"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CClrChange)
 			{
 				oElm = {
-					elm: {
-						clrFrom: SerColor(baseArrEffectLst[nEffect].clrFrom),
-						clrTo: SerColor(baseArrEffectLst[nEffect].clrTo),
-						useA: baseArrEffectLst[nEffect].useA
-					},
-					type: "clrChange"
+					clrFrom: SerColor(baseArrEffectLst[nEffect].clrFrom),
+					clrTo:   SerColor(baseArrEffectLst[nEffect].clrTo),
+					useA:    baseArrEffectLst[nEffect].useA,
+					type:    "clrChange"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CClrRepl)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].color)
-					},
-					type: "clrRepl"
+					color: SerColor(baseArrEffectLst[nEffect].color),
+					type:  "clrRepl"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CEffectContainer)
 			{
 				oElm = {
-					elm: SerEffectDag(baseArrEffectLst[nEffect]),
+					cont: SerEffectDag(baseArrEffectLst[nEffect]),
 					type: "effCont"
 				}
 			}
@@ -1045,182 +1021,151 @@
 					arrColors.push(SerColor(baseArrEffectLst[nEffect].colors[nColor]));
 				}
 				oElm = {
-					elm: {
-						colors: arrColors
-					},
-					type: "duotone"
+					colors: arrColors,
+					type:   "duotone"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CEffectElement)
 			{
 				oElm = {
-					elm: {
-						ref: baseArrEffectLst[nEffect].ref
-					},
+					ref:  baseArrEffectLst[nEffect].ref,
 					type: "effect"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CFillEffect)
 			{
 				oElm = {
-					elm: {
-						fill: SerFill(baseArrEffectLst[nEffect].fill)
-					},
+					fill: SerFill(baseArrEffectLst[nEffect].fill),
 					type: "fill"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CFillOverlay)
 			{
 				oElm = {
-					elm: {
-						fill: SerFill(baseArrEffectLst[nEffect].fill),
-						blend: baseArrEffectLst[nEffect].blend
-					},
-					type: "fillOvrl"
+					fill:  SerFill(baseArrEffectLst[nEffect].fill),
+					blend: baseArrEffectLst[nEffect].blend,
+					type:  "fillOvrl"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CGlow)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].color),
-						rad: baseArrEffectLst[nEffect].rad
-					},
-					type: "glow"
+					color: SerColor(baseArrEffectLst[nEffect].color),
+					rad:   baseArrEffectLst[nEffect].rad,
+					type:  "glow"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CGrayscl)
 			{
 				oElm = {
-					elm: null,
 					type: "gray"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CHslEffect)
 			{
 				oElm = {
-					elm: {
-						hue: baseArrEffectLst[nEffect].h,
-						lum: baseArrEffectLst[nEffect].l,
-						sat: baseArrEffectLst[nEffect].s
-					},
+					hue:  baseArrEffectLst[nEffect].h,
+					lum:  baseArrEffectLst[nEffect].l,
+					sat:  baseArrEffectLst[nEffect].s,
 					type: "hsl"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CInnerShdw)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].color),
-						blurRad: baseArrEffectLst[nEffect].blurRad,
-						dir: baseArrEffectLst[nEffect].dir,
-						dist: baseArrEffectLst[nEffect].dist
-					},
-					type: "innerShdw"
+					color:   SerColor(baseArrEffectLst[nEffect].color),
+					blurRad: baseArrEffectLst[nEffect].blurRad,
+					dir:     baseArrEffectLst[nEffect].dir,
+					dist:    baseArrEffectLst[nEffect].dist,
+					type:    "innerShdw"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CLumEffect)
 			{
 				oElm = {
-					elm: {
-						bright: baseArrEffectLst[nEffect].bright,
-						contrast: baseArrEffectLst[nEffect].contrast
-					},
-					type: "lum"
+					bright:   baseArrEffectLst[nEffect].bright,
+					contrast: baseArrEffectLst[nEffect].contrast,
+					type:     "lum"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.COuterShdw)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].color),
-						algn: baseArrEffectLst[nEffect].algn,
-						blurRad: baseArrEffectLst[nEffect].blurRad,
-						dir: baseArrEffectLst[nEffect].dir,
-						dist: baseArrEffectLst[nEffect].dist,
-						kx: baseArrEffectLst[nEffect].kx,
-						ky: baseArrEffectLst[nEffect].ky,
-						rotWithShape: baseArrEffectLst[nEffect].rotWithShape,
-						sx: baseArrEffectLst[nEffect].sx,
-						sy: baseArrEffectLst[nEffect].sy
-					},
-					type: "outerShdw"
+					color:        SerColor(baseArrEffectLst[nEffect].color),
+					algn:         baseArrEffectLst[nEffect].algn,
+					blurRad:      baseArrEffectLst[nEffect].blurRad,
+					dir:          baseArrEffectLst[nEffect].dir,
+					dist:         baseArrEffectLst[nEffect].dist,
+					kx:           baseArrEffectLst[nEffect].kx,
+					ky:           baseArrEffectLst[nEffect].ky,
+					rotWithShape: baseArrEffectLst[nEffect].rotWithShape,
+					sx:           baseArrEffectLst[nEffect].sx,
+					sy:           baseArrEffectLst[nEffect].sy,
+					type:         "outerShdw"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CPrstShdw)
 			{
 				oElm = {
-					elm: {
-						color: SerColor(baseArrEffectLst[nEffect].color),
-						dir: baseArrEffectLst[nEffect].dir,
-						dist: baseArrEffectLst[nEffect].dis,
-						prst: baseArrEffectLst[nEffect].prst
-					},
-					type: "prstShdw"
+					color: SerColor(baseArrEffectLst[nEffect].color),
+					dir:   baseArrEffectLst[nEffect].dir,
+					dist:  baseArrEffectLst[nEffect].dis,
+					prst:  baseArrEffectLst[nEffect].prst,
+					type:  "prstShdw"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CReflection)
 			{
 				oElm = {
-					elm: {
-						algn: baseArrEffectLst[nEffect].algn,
-						blurRad: baseArrEffectLst[nEffect].blurRad,
-						dir: baseArrEffectLst[nEffect].dir,
-						dist: baseArrEffectLst[nEffect].dist,
-						endA: baseArrEffectLst[nEffect].endA,
-						endPos: baseArrEffectLst[nEffect].endPos,
-						fadeDir: baseArrEffectLst[nEffect].fadeDir,
-						kx: baseArrEffectLst[nEffect].kx,
-						ky: baseArrEffectLst[nEffect].ky,
-						rotWithShape: baseArrEffectLst[nEffect].rotWithShape,
-						stA: baseArrEffectLst[nEffect].stA,
-						stPos: baseArrEffectLst[nEffect].stPos,
-						sx: baseArrEffectLst[nEffect].sx,
-						sy: baseArrEffectLst[nEffect].sy
-					},
+					algn:         baseArrEffectLst[nEffect].algn,
+					blurRad:      baseArrEffectLst[nEffect].blurRad,
+					dir:          baseArrEffectLst[nEffect].dir,
+					dist:         baseArrEffectLst[nEffect].dist,
+					endA:         baseArrEffectLst[nEffect].endA,
+					endPos:       baseArrEffectLst[nEffect].endPos,
+					fadeDir:      baseArrEffectLst[nEffect].fadeDir,
+					kx:           baseArrEffectLst[nEffect].kx,
+					ky:           baseArrEffectLst[nEffect].ky,
+					rotWithShape: baseArrEffectLst[nEffect].rotWithShape,
+					stA:          baseArrEffectLst[nEffect].stA,
+					stPos:        baseArrEffectLst[nEffect].stPos,
+					sx:           baseArrEffectLst[nEffect].sx,
+					sy:           baseArrEffectLst[nEffect].sy,
 					type: "reflection"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CRelOff)
 			{
 				oElm = {
-					elm: {
-						tx: baseArrEffectLst[nEffect].tx,
-						ty: baseArrEffectLst[nEffect].ty
-					},
+					tx:   baseArrEffectLst[nEffect].tx,
+					ty:   baseArrEffectLst[nEffect].ty,
 					type: "relOff"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CSoftEdge)
 			{
 				oElm = {
-					elm: {
-						rad: baseArrEffectLst[nEffect].rad
-					},
+					rad:  baseArrEffectLst[nEffect].rad,
 					type: "softEdge"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CTintEffect)
 			{
 				oElm = {
-					elm: {
-						amt: baseArrEffectLst[nEffect].amt,
-						hue: baseArrEffectLst[nEffect].hue
-					},
+					amt: baseArrEffectLst[nEffect].amt,
+					hue: baseArrEffectLst[nEffect].hue,
 					type: "tint"
 				}
 			}
 			else if (baseArrEffectLst[nEffect] instanceof AscFormat.CXfrmEffect)
 			{
 				oElm = {
-					elm: {
-						kx: baseArrEffectLst[nEffect].kx,
-						ky: baseArrEffectLst[nEffect].ky,
-						sx: baseArrEffectLst[nEffect].sx,
-						sy: baseArrEffectLst[nEffect].sy,
-						tx: baseArrEffectLst[nEffect].tx,
-						ty: baseArrEffectLst[nEffect].ty
-					},
+					kx: baseArrEffectLst[nEffect].kx,
+					ky: baseArrEffectLst[nEffect].ky,
+					sx: baseArrEffectLst[nEffect].sx,
+					sy: baseArrEffectLst[nEffect].sy,
+					tx: baseArrEffectLst[nEffect].tx,
+					ty: baseArrEffectLst[nEffect].ty,
 					type: "xfrm"
 				}
 			}
@@ -1228,36 +1173,56 @@
 		}
 		return {
 			effectList: arrEffectLst,
-			name: oEffectDag.name,
-			type: oEffectDag.type
+			name:       oEffectDag.name,
+			type:       oEffectDag.type
 		}
 	};
 	function SerFill(oFill)
 	{
 		if (!oFill)
 			return oFill;
-
-		var arrColorMods = [];
-		var oColor = oFill.fill.color ? {
-			red:   oFill.fill.color.RGBA.R,
-			green: oFill.fill.color.RGBA.G,
-			blue:  oFill.fill.color.RGBA.B,
-			alpha: oFill.fill.color.RGBA.A 
-		} : oFill.fill.color;
-		if (oFill.fill.Mods)
+		
+		var oFillObj = null;
+		if (oFill.fill)
 		{
-			for (var nMod = 0; nMod < oFill.fill.Mods.length; nMod++)
+			switch (oFill.fill.type)
 			{
-				arrColorMods.push({
-					name: oFill.fill.Mods[nMod].name,
-					val: oFill.fill.Mods[nMod].val
-				});
+				case Asc.c_oAscFill.FILL_TYPE_NONE:
+					oFillObj = {
+						type: "none"
+					}
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_SOLID:
+					oFillObj = {
+						color: SerColor(oFill.fill.color),
+						type: "solid"
+					}
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_BLIP:
+					oFillObj = SerBlipFill(oFill.fill);
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_NOFILL:
+					oFillObj = {
+						type: "noFill"
+					}
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_GRAD:
+					oFillObj = SerGradFill(oFill.fill);
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_PATT:
+					oFillObj = SerPattFill(oFill.fill);
+					break;
+				case Asc.c_oAscFill.FILL_TYPE_GRP:
+					oFillObj = {
+						type: "grp"
+					};
+					break;
 			}
 		}
-
+		
 		return {
-			color: oColor,
-			mods: arrColorMods
+			fill: oFillObj,
+			type: "fill"
 		}
 	};
 	function SerShd(oShd)
@@ -1293,12 +1258,97 @@
 			return oColor;
 
 		var arrColorMods = [];
-		var oColor = oColor.color ? {
+
+		var oRGBA = oColor.color ? {
 			red:   oColor.color.RGBA.R,
 			green: oColor.color.RGBA.G,
 			blue:  oColor.color.RGBA.B,
 			alpha: oColor.color.RGBA.A 
 		} : oColor.color;
+
+		var oColorObj  = undefined;
+		var oColorType = undefined;
+		if (oColor.color)
+		{
+			switch (oColor.color.type)
+			{
+				case Asc.c_oAscColor.COLOR_TYPE_NONE:
+					oColorType = "none";
+					oColorObj  = {
+						type: oColorType
+					}
+					break;
+				case Asc.c_oAscColor.COLOR_TYPE_SRGB:
+				{
+					oColorType = "srgb";
+					oColorObj  = {
+						rgba: {
+							red:   oColor.color.RGBA.R,
+							green:  oColor.color.RGBA.G,
+							blue:  oColor.color.RGBA.B,
+							alpha: oColor.color.RGBA.A 
+						},
+						type: oColorType
+					}
+					break;
+				}
+				case Asc.c_oAscColor.COLOR_TYPE_PRST:
+				{
+					oColorType = "prst";
+					oColorObj  = {
+						rgba: {
+							red:   oColor.color.RGBA.R,
+							green:  oColor.color.RGBA.G,
+							blue:  oColor.color.RGBA.B,
+							alpha: oColor.color.RGBA.A 
+						},
+						id:   oColor.color.id,
+						type: oColorType
+					}
+					break;
+				}
+				case Asc.c_oAscColor.COLOR_TYPE_SCHEME:
+				{
+					oColorType = "scheme";
+					oColorObj  = {
+						rgba: {
+							red:   oColor.color.RGBA.R,
+							green:  oColor.color.RGBA.G,
+							blue:  oColor.color.RGBA.B,
+							alpha: oColor.color.RGBA.A 
+						},
+						id:   oColor.color.id,
+						type: oColorType
+					}
+					break;
+				}
+				case Asc.c_oAscColor.COLOR_TYPE_SYS:
+				{
+					oColorType = "sys";
+					oColorObj  = {
+						rgba: {
+							red:   oColor.color.RGBA.R,
+							green:  oColor.color.RGBA.G,
+							blue:  oColor.color.RGBA.B,
+							alpha: oColor.color.RGBA.A 
+						},
+						id:   oColor.color.id,
+						type: oColorType
+					}
+					break;
+				}
+				case Asc.c_oAscColor.COLOR_TYPE_STYLE:
+				{
+					oColorType = "style";
+					oColorObj  = {
+						auto: oColor.color.bAuto,
+						val:  oColor.color.val
+					}
+					break;
+				}
+			}
+		}
+		
 		if (oColor.Mods)
 		{
 			for (var nMod = 0; nMod < oColor.Mods.length; nMod++)
@@ -1311,8 +1361,57 @@
 		}
 
 		return {
-			color: oColor,
-			mods: arrColorMods
+			rgba:  oRGBA,
+			color: oColorObj,
+			mods:  arrColorMods
+		}
+	};
+	function SerGradFill(oGradFill)
+	{
+		if (!oGradFill)
+			return oGradFill;
+		
+		var arrGsLst = [];
+		for (var nGs = 0; nGs < oGradFill.colors.length; nGs++)
+		{
+			arrGsLst.push({
+				color: SerColor(oGradFill.colors[nGs].color),
+				pos:   oGradFill.colors[nGs].pos
+			});
+		}
+
+		return {
+			gsLst: arrGsLst,
+
+			lin:   oGradFill.lin ? {
+				ang:    oGradFill.lin.angle,
+				scaled: oGradFill.lin.scale
+			} : oGradFill.lin,
+
+			path: oGradFill.path ? {
+				path: oGradFill.path.path,
+				fillToRect: oGradFill.path.rect ? {
+					b: oGradFill.path.rect.b,
+					l: oGradFill.path.rect.l,
+					r: oGradFill.path.rect.r,
+					t: oGradFill.path.rect.t
+				} : oGradFill.path.rect
+			} : oGradFill.path,
+
+			rotWithShape: oGradFill.rotateWithShape,
+			type: "gradFill"
+		}
+	};
+	function SerPattFill(oPattFill)
+	{
+		if (!oPattFill)
+			return oPattFill;
+
+		return {
+			bgClr: oPattFill.bgClr ? SerColor(oPattFill.bgClr) : oPattFill.bgClr,
+			fgClr: oPattFill.fgClr ? SerColor(oPattFill.fgClr) : oPattFill.fgClr,
+			prst:  oPattFill.fType,
+			type: "pattFill"
 		}
 	};
 	function SerTxPr(oTxPr)
@@ -1321,9 +1420,9 @@
 			return oTxPr;
 
 		return {
-			bodyPr: SerBodyPr(oTxPr.bodyPr),
+			bodyPr:   SerBodyPr(oTxPr.bodyPr),
 			lstStyle: SerLstStyle(oTxPr.lstStyle),
-			content: []
+			content:  []
 		}
 	};
 	function SerBodyPr(oBodyPr)
@@ -1851,7 +1950,7 @@
 			return oBorder;
 
 		var sBorderType = "none";
-		if (oBorder.Type === border_Single)
+		if (oBorder.Value === border_Single)
 			sBorderType = "single";
 
 		return {
@@ -1867,8 +1966,8 @@
 				color: SerColor(oBorder.LineRef.Color)
 			} : oBorder.LineRef,
 
-			sz:         oBorder.Size,
-			space:      oBorder.Space,
+			sz:         private_MM2Twips(oBorder.Size),
+			space:      private_MM2Twips(oBorder.Space),
 			themeColor: SerFill(oBorder.Unifill),
 			value:      sBorderType
 		}
@@ -1883,6 +1982,7 @@
 
 		if (!aComplexFieldsToSave)
 			aComplexFieldsToSave = GetComplexFieldsToSave(oDocContent.Content);
+
 		var TempElm = null;
 		for (var nElm = 0; nElm < oDocContent.Content.length; nElm++)
 		{
@@ -1916,6 +2016,27 @@
 			afterAutoSpacing:  oParaPr.Spacing.AfterAutoSpacing !== undefined ? (oParaPr.Spacing.AfterAutoSpacing === true ? "on" : "off") : oParaPr.Spacing.AfterAutoSpacing
 		};
 
+		// horizontal align
+		var sJc = undefined;
+		switch (oParaPr.Jc)
+		{
+			case AscCommon.align_Right:
+				sJc = "end";
+				break;
+			case AscCommon.align_Left:
+				sJc = "start";
+				break;
+			case AscCommon.align_Center:
+				sJc = "center";
+				break;
+			case AscCommon.align_Justify:
+				sJc = "both";
+				break;
+			case AscCommon.align_Distributed:
+				sJc = "distribute";
+				break;
+		}
+
 		switch (oParaPr.Spacing.LineRule)
 		{
 			case linerule_AtLeast:
@@ -1929,6 +2050,10 @@
 			case linerule_Exact:
 				oSpacing["lineRule"] = "exact";
 				oSpacing["line"]     = private_MM2Twips(oParaPr.Spacing.Line)
+				break;
+			default:
+				oSpacing["lineRule"] = undefined;
+				oSpacing["line"]     = undefined;
 				break;
 		}
 
@@ -1955,12 +2080,12 @@
 
 			ind: oParaPr.Ind ? 
 			{
-				left:      oParaPr.Ind.Left, /// start ?
-				right:     oParaPr.Ind.Right, /// end ?
-				firstLine: oParaPr.Ind.FirstLine
+				left:      oParaPr.Ind.Left      ? private_MM2Twips(oParaPr.Ind.Left)      : oParaPr.Ind.Left,
+				right:     oParaPr.Ind.Right     ? private_MM2Twips(oParaPr.Ind.Right)     : oParaPr.Ind.Right,
+				firstLine: oParaPr.Ind.FirstLine ? private_MM2Twips(oParaPr.Ind.FirstLine) : oParaPr.Ind.FirstLine
 			} : oParaPr.Ind,
 
-			jc:        oParaPr.Jc,
+			jc:        sJc,
 			keepLines: oParaPr.KeepLines,
 			keepNext:  oParaPr.KeepNext,
 
@@ -2000,21 +2125,8 @@
 		var oBlockSdt = 
 		{
 			sdtPr: SerSdtPr(oSdt.Pr),
-			sdtContent: [],
-			type: "blockSdt"
-		}
-
-		var TempElm = null;
-		for (var nElm = 0; nElm < oSdt.Content.Content.length; nElm++)
-		{
-			TempElm = oSdt.Content.Content[nElm];
-
-			if (TempElm instanceof AscCommonWord.Paragraph)
-				oBlockSdt.sdtContent.push(SerParagraph(TempElm, aComplexFieldsToSave));
-			else if (TempElm instanceof AscCommonWord.CTable)
-				oBlockSdt.sdtContent.push(SerTable(TempElm, aComplexFieldsToSave));
-			else if (TempElm instanceof AscCommonWord.CBlockLevelSdt)
-				oBlockSdt.sdtContent.push(SerBlockLvlSdt(TempElm, aComplexFieldsToSave));
+			sdtContent: SerDocContent(oSdt.Content),
+			type: "blockLvlSdt"
 		}
 
 		return oBlockSdt;
@@ -2025,7 +2137,7 @@
 		{
 			sdtPr: SerSdtPr(oSdt.Pr),
 			content: [],
-			type: "inlineSdt"
+			type: "inlineLvlSdt"
 		}
 
 		var TempElm = null;
@@ -2034,11 +2146,11 @@
 			TempElm = oSdt.Content[nElm];
 
 			if (TempElm instanceof AscCommonWord.ParaRun)
-				oInlineSdt.content.push(SerParaRun(TempElm));
+				oInlineSdt.content.push(SerParaRun(TempElm, aComplexFieldsToSave));
 			else if (TempElm instanceof AscCommonWord.ParaHyperlink)
-				oInlineSdt.content.push(SerHyperlink(TempElm));
+				oInlineSdt.content.push(SerHyperlink(TempElm, aComplexFieldsToSave));
 			else if (TempElm instanceof AscCommonWord.CInlineLevelSdt)
-				oInlineSdt.content.push(SerInlineLvlSdt(TempElm));
+				oInlineSdt.content.push(SerInlineLvlSdt(TempElm, aComplexFieldsToSave));
 		}
 
 		return oInlineSdt;
@@ -2094,6 +2206,12 @@
 				if (oTempResult)
 					oParaObject["content"].push(oTempResult);
 			}
+			if (oTempElm instanceof AscCommonWord.CInlineLevelSdt)
+			{
+				var oSdt = SerInlineLvlSdt(oTempElm, aComplexFieldsToSave);
+				if (oSdt)
+					oParaObject["content"].push(oSdt);
+			}
 		}
 
 		return oParaObject;
@@ -2101,21 +2219,25 @@
 	function SerHyperlink(oHyperlink, aComplexFieldsToSave)
 	{
 		var oLinkObject = {
-			anchor:  this.ParaHyperlink.Anchor,
-			tooltip: this.ParaHyperlink.ToolTip,
+			anchor:  oHyperlink.Anchor  ? oHyperlink.Anchor  : undefined,
+			tooltip: oHyperlink.ToolTip ? oHyperlink.ToolTip : undefined,
+			value:   oHyperlink.Value   ? oHyperlink.Value   : undefined,
 			content: [],
 			type:    "hyperlink"
 		};
+
+		if (!aComplexFieldsToSave)
+			aComplexFieldsToSave = GetAllParaComplexFields(oHyperlink);
 		
 		var oTempElm = null;
-		for (var nElm = 0; nElm < this.ParaHyperlink.Content.length; nElm++)
+		for (var nElm = 0; nElm < oHyperlink.Content.length; nElm++)
 		{
-			oTempElm = this.ParaHyperlink.Content[nElm];
+			oTempElm = oHyperlink.Content[nElm];
 			
 			if (oTempElm instanceof AscCommonWord.ParaRun)
-				oLinkObject.content.push(SerParaRun(oTempElm));
+				oLinkObject.content.push(SerParaRun(oTempElm, aComplexFieldsToSave));
 			else if (oTempElm instanceof AscCommonWord.CInlineLevelSdt)
-				oLinkObject.content.push(SerInlineLvlSdt(oTempElm));
+				oLinkObject.content.push(SerInlineLvlSdt(oTempElm, aComplexFieldsToSave));
 					
 		}
 
@@ -2129,6 +2251,9 @@
 			type:    "run"
 		}
 		
+		if (oRun.IsMathRun())
+			oRunObject.type = "mathRun";
+
 		if (!aComplexFieldsToSave)
 		{
 			aComplexFieldsToSave = GetComplexFieldToSave(oRun);
@@ -3308,7 +3433,9 @@
 				sy: oBlipFill.tile.sy,
 				tx: oBlipFill.tile.tx,
 				ty: oBlipFill.tile.ty
-			} : oBlipFill.tile
+			} : oBlipFill.tile,
+			rotWithShape: oBlipFill.rotWithShape,
+			type: "blipFill"
 		};
 	};
 	function SerUniNvPr(oUniNvPr)
@@ -3548,18 +3675,18 @@
 		var sVAlign = undefined;
 
 		// alignV
-		if (oTextPr.VAlign)
+		if (oTextPr.VertAlign)
 		{
-			switch (oTextPr.VAlign)
+			switch (oTextPr.VertAlign)
 			{
-				case vertalignjc_Top:
-					sVAlign = "top";
+				case 0:
+					sVAlign = "baseline";
 					break;
-				case vertalignjc_Center:
-					sVAlign = "center";
+				case 1:
+					sVAlign = "superscript";
 					break;
-				case vertalignjc_Bottom:
-					sVAlign = "bottom";
+				case 2:
+					sVAlign = "subscript";
 					break;
 			}
 		}
@@ -3646,6 +3773,22 @@
 			}
 		}
 
+		var sLockType = undefined;
+		switch (oSdtPr.Lock)
+		{
+			case Asc.c_oAscSdtLockType.ContentLocked:
+				sLockType = "contentLocked";
+				break;
+			case Asc.c_oAscSdtLockType.SdtContentLocked:
+				sLockType = "sdtContentLocked";
+				break;
+			case Asc.c_oAscSdtLockType.SdtLocked:
+				sLockType = "sdtLocked";
+				break;
+			case Asc.c_oAscSdtLockType.Unlocked:
+				sLockType = "unlocked";
+				break;
+		}
 		return {
 			alias: oSdtPr.Alias,
 
@@ -3675,7 +3818,7 @@
 			equation : oSdtPr.Equation,
 			id:        oSdtPr.Id,
 			label:     oSdtPr.Label,
-			lock:      oSdtPr.Lock,
+			lock:      sLockType,
 			picture:   oSdtPr.Picture,
 
 			placeholder: oSdtPr.Placeholder ? {
@@ -3686,7 +3829,9 @@
 			showingPlcHdr: oSdtPr.ShowingPlcHdr,
 			tag:           oSdtPr.Tag,
 			temporary:     oSdtPr.Temporary,
-			text:          oSdtPr.Text
+			text:          {
+				multiLine: oSdtPr.Text
+			}
 		}
 	};
 	function SerParaMath(oParaMath)
@@ -4224,6 +4369,851 @@
 		return null;
 	};
 	// end of serialize functions
+
+	// start of FromJSON functions
+	function ParaRunFromJSON(oParsedJSON)
+	{
+		var aContent    = oParsedJSON["content"];
+		var oPr         = oParsedJSON["rPr"];
+
+		var oTextPr = TextPrFromJSON(oPr);
+		var oRun    = oParsedJSON.type === "run" ? new ParaRun(null, false) : new ParaRun(null, true);
+
+		for (var nElm = 0; nElm < aContent.length; nElm++)
+		{
+			// записываем текстовый контент в ран(либо обычный ран либо mathRun)
+			if (typeof aContent[nElm] === "string")
+			{
+				if (oParsedJSON.type === "run")
+					oRun.AddText(aContent[nElm]);
+				else
+				{
+					for (var nChar = 0; nChar < aContent[nElm].length; nChar++)
+					{
+						if (0x0026 == aContent[nElm].charCodeAt(0))
+							var oText = new CMathAmp();
+						else
+						{
+							var oText = new CMathText(false);
+							oText.addTxt(aContent[nElm]);
+						}
+						oRun.Add(oText, true);
+					}
+				}
+				continue;
+			}
+
+			switch (aContent[nElm].type)
+			{
+				case "break":
+					switch(aContent[nElm].breakType)
+					{
+						case "textWrapping":
+							oRun.AddToContent(-1, new AscCommonWord.ParaNewLine(AscCommonWord.break_Line));
+							break;
+						case "page":
+							oRun.AddToContent(-1, new AscCommonWord.ParaNewLine(AscCommonWord.break_Page));
+							break;
+						case "column":
+							oRun.AddToContent(-1, new AscCommonWord.ParaNewLine(AscCommonWord.break_Column));
+							break;
+					}
+					break;
+				case "pgNum":
+					oRun.AddToContent(-1, new ParaPageNum());
+					break;
+				case "tab":
+					oRun.AddToContent(-1, new ParaTab());
+			}
+		}
+		
+		oRun.Pr = oTextPr;
+
+		return oRun;
+	};
+	function TextPrFromJSON(oPr)
+	{
+		var oTextPr  = new AscCommonWord.CTextPr();
+
+		// alignV
+		var nVAlign  = undefined;
+		if (oPr["vertAlign"])
+		{
+			switch (oPr["vertAlign"])
+			{
+				case "baseline":
+					nVAlign = 0;
+					break;
+				case "superscript":
+					nVAlign = 1;
+					break;
+				case "subscript":
+					nVAlign = 2;
+					break;
+			}
+		}
+
+		oTextPr.Bold                  = oPr["b"];
+		oTextPr.BoldCS                = oPr["bCs"];
+		oTextPr.Caps                  = oPr["caps"];
+		oTextPr.Color                 = oPr["color"] ? new AscCommonWord.CDocumentColor(oPr["color"].r, oPr["color"].g, oPr["color"].b, oPr["color"].auto) : oPr["color"];
+		oTextPr.CS                    = oPr["cs"];
+		oTextPr.DStrikeout            = oPr["dstrike"];
+		oTextPr.HighLight             = oPr["highlight"] === "none" ? -1 : oPr["highlight"] != undefined ? new AscCommonWord.CDocumentColor(oPr["highlight"].r, oPr["highlight"].g, oPr["highlight"].b, oPr["highlight"].auto) : oPr["highlight"];
+		oTextPr.Italic                = oPr["i"];
+		oTextPr.ItalicCS              = oPr["iCs"];
+		oTextPr.Lang.Bidi             = oPr["lang"].bidi;
+		oTextPr.Lang.EastAsia         = oPr["lang"].eastAsia;
+		oTextPr.Lang.Val              = oPr["lang"].val;
+		oTextPr.TextOutline           = oPr["outline"];
+		oTextPr.Position              = oPr["position"] ? private_PtToMM(oPr["position"] / 2.0) : oPr["position"];
+		oTextPr.RFonts.Ascii          = oPr["rFonts"].ascii;
+		oTextPr.RFonts.AsciiTheme     = oPr["rFonts"].asciiTheme;
+		oTextPr.RFonts.CS             = oPr["rFonts"].cs;
+		oTextPr.RFonts.CSTheme        = oPr["rFonts"].cstheme;
+		oTextPr.RFonts.EastAsia       = oPr["rFonts"].eastAsia;
+		oTextPr.RFonts.EastAsiaTheme  = oPr["rFonts"].eastAsiaTheme;
+		oTextPr.RFonts.HAnsi          = oPr["rFonts"].hAnsi;
+		oTextPr.RFonts.HAnsiTheme     = oPr["rFonts"].hAnsiTheme;
+		oTextPr.RFonts.Hint           = oPr["rFonts"].hint;
+		oTextPr.PrChange              = oPr["rPrChange"] ? TextPrFromJSON(oPr["rPrChange"]) : oPr["rPrChange"];
+		oTextPr.RStyle                = null;//StyleFromJSON(oPr["rStyle"]); /// ???
+		oTextPr.RTL                   = oPr["rtl"];
+		oTextPr.Shd                   = oPr["shd"] ? ShadeFromJSON(oPr["shd"]) : oPr["shd"]; /// ???
+		oTextPr.SmallCaps             = oPr["smallCaps"];
+		oTextPr.Spacing               = oPr["spacing"] ? private_Twips2MM(oPr["spacing"]) : oPr["spacing"];
+		oTextPr.Strikeout             = oPr["strike"];
+		oTextPr.FontSize              = oPr["sz"] ? oPr["sz"] / 2.0 : oPr["sz"];
+		oTextPr.FontSizeCS            = oPr["szCs"] ? oPr["szCs"] / 2.0 : oPr["szCs"];
+		oTextPr.Underline             = oPr["u"];
+		oTextPr.Vanish                = oPr["vanish"];
+		oTextPr.VertAlign             = nVAlign;
+
+		return oTextPr;
+	};
+	function ShadeFromJSON(oShd) /// To do
+	{
+		var oShade  = new AscCommonWord.CDocumentShd();
+		oShade.Fill = oShd.fill ? new CDocumentColor() : oShd.fill;
+
+		oShade.Value = oShd.val;
+
+		oShade.Color.r    = oShd.color.r;
+		oShade.Color.g    = oShd.color.g;
+		oShade.Color.b    = oShd.color.b;
+		oShade.Color.Auto = oShd.color.auto;
+
+		if (oShade.Fill)
+		{
+			oShade.Fill.r    = oShd.fill.r;
+			oShade.Fill.g    = oShd.fill.g;
+			oShade.Fill.b    = oShd.fill.b;
+			oShade.Fill.Auto = oShd.fill.auto;	
+		}
+
+		oShade.FillRef   = oShd.fillRef    ? StyleRefFromJSON(oShd.fillRef) : oShd.fillRef;
+		oShade.UniFill   = oShd.themeColor ? FillFromJSON(oShd.themeColor)  : oShd.themeColor;
+		oShade.themeFill = oShd.themeFill  ? FillFromJSON(oShd.themeFill)   : oShd.themeFill;
+
+		return oShade;
+	};
+	Api.prototype.Run = function(oRun)
+	{
+		return new ApiRun(oRun);
+	};
+	function ParagraphFromJSON(oParsedJSON)
+	{
+		var aContent    = oParsedJSON["content"];
+		var oPr         = oParsedJSON["pPr"];
+
+		var oParaPr   = ParaPrFromJSON(oPr);
+		var oPara     = new AscCommonWord.Paragraph(private_GetDrawingDocument(), private_GetLogicDocument());
+		oPara.Pr      = oParaPr;
+
+		for (var nElm = 0; nElm < aContent.length; nElm++)
+		{
+			switch (aContent[nElm].type)
+			{
+				case "run":
+				case "mathRun":
+					oPara.AddToContent(oPara.Content.length - 1, ParaRunFromJSON(aContent[nElm]));
+					break;
+				case "hyperlink":
+					oPara.AddToContent(oPara.Content.length - 1, HyperlinkFromJSON(aContent[nElm]));
+					break;
+				case "inlineLvlSdt":
+					oPara.AddToContent(oPara.Content.length - 1, InlineLvlSdtFromJSON(aContent[nElm]))
+			}
+		}
+
+		return oPara;
+	};
+	function ParaPrFromJSON(oPr)
+	{
+		var oParaPr = new AscCommonWord.CParaPr();
+		
+		oParaPr.ContextualSpacing = oPr.contextualSpacing;
+
+		// align
+		var nJc = undefined;
+		switch (oPr.jc)
+		{
+			case "end":
+				nJc = align_Right;
+				break;
+			case "start":
+				nJc = align_Left;
+				break;
+			case "center":
+				nJc = align_Center;
+				break;
+			case "both":
+				nJc = align_Justify;
+				break;
+			case "distribute":
+				nJc = align_Distributed;
+				break;
+		}
+
+		switch (oPr.spacing.lineRule)
+		{
+			case "atLeast":
+				oParaPr.Spacing["lineRule"] = linerule_AtLeast;
+				oParaPr.Spacing["line"]     = oPr.spacing.Line ? private_Twips2MM(oPr.spacing.Line) : oPr.spacing.Line;
+				break;
+			case "auto":
+				oParaPr.Spacing["lineRule"] = linerule_Auto;
+				oParaPr.Spacing["line"]     = oPr.spacing.Line ? private_Twips2MM(oPr.spacing.Line) : oPr.spacing.Line;
+				break;
+			case "exact":
+				oParaPr.Spacing["lineRule"] = linerule_Exact;
+				oParaPr.Spacing["line"]     = oPr.spacing.Line ? private_Twips2MM(oPr.spacing.Line) : oPr.spacing.Line;
+				break;
+			default:
+				oParaPr.Spacing["lineRule"] = undefined;
+				oParaPr.Spacing["line"]     = undefined;
+				break;
+		}
+		
+		oParaPr.Spacing.Before            = oPr.spacing.before ? private_Twips2MM(oPr.spacing.before) : oPr.spacing.before;
+		oParaPr.Spacing.BeforePct         =	oPr.spacing.beforePct;
+		oParaPr.Spacing.BeforeAutoSpacing =	oPr.spacing.beforeAutoSpacing !== undefined ? (oPr.spacing.beforeAutoSpacing === true ? "on" : "off") : oPr.spacing.beforeAutoSpacing;
+		oParaPr.Spacing.After             = oPr.spacing.after ? private_Twips2MM(oPr.spacing.after) : oPr.spacing.after;
+		oParaPr.Spacing.AfterPct          = oPr.spacing.afterPct;
+		oParaPr.Spacing.AfterAutoSpacing  = oPr.spacing.afterAutoSpacing !== undefined ? (oPr.spacing.afterAutoSpacing === true ? "on" : "off") : oPr.spacing.afterAutoSpacing;
+
+		if (oPr.framePr)
+		{
+			oParaPr.FramePr         = new CFramePr();
+			oParaPr.FramePr.DropCap = oPr.framePr.dropCap;
+			oParaPr.FramePr.H       = oPr.framePr.h;
+			oParaPr.FramePr.HAnchor = oPr.framePr.hAnchor;
+			oParaPr.FramePr.HRule   = oPr.framePr.hRule;
+			oParaPr.FramePr.HSpace  = oPr.framePr.hSpace;
+			oParaPr.FramePr.Lines   = oPr.framePr.lines;
+			oParaPr.FramePr.VAnchor = oPr.framePr.vAnchor;
+			oParaPr.FramePr.VSpace  = oPr.framePr.vSpace;
+			oParaPr.FramePr.W       = oPr.framePr.w;
+			oParaPr.FramePr.Wrap    = oPr.framePr.wrap;
+			oParaPr.FramePr.X       = oPr.framePr.x;
+			oParaPr.FramePr.XAlign  = oPr.framePr.xAlign;
+			oParaPr.FramePr.Y       = oPr.framePr.y;
+			oParaPr.FramePr.YAlign  = oPr.framePr.yAlign;
+		}
+		else
+			oParaPr.FramePr = oPr.framePr;
+
+		oParaPr.Ind.Left        = oPr.ind.left      ? private_Twips2MM(oPr.ind.left)      : oPr.ind.left;
+		oParaPr.Ind.Right       = oPr.ind.right     ? private_Twips2MM(oPr.ind.right)     : oPr.ind.right;
+		oParaPr.Ind.FirstLine   = oPr.ind.firstLine ? private_Twips2MM(oPr.ind.firstLine) : oPr.ind.firstLine;
+		oParaPr.Jc              = nJc;
+		oParaPr.KeepLines       = oPr.keepLines;
+		oParaPr.KeepNext        = oPr.keepNext;
+		oParaPr.NumPr           = oPr.numPr ? new CNumPr(oPr.numPr.numId, oPr.numPr.ilvl) : oPr.numPr;
+		oParaPr.OutlineLvl      = oPr.outlineLvl;
+		oParaPr.Brd.Between     = oPr.pBdr.between ? DocBorderFromJSON(oPr.pBdr.between) : oPr.pBdr.between;
+		oParaPr.Brd.Bottom      = oPr.pBdr.bottom  ? DocBorderFromJSON(oPr.pBdr.bottom)  : oPr.pBdr.bottom;
+		oParaPr.Brd.Left        = oPr.pBdr.left    ? DocBorderFromJSON(oPr.pBdr.left)    : oPr.pBdr.left;
+		oParaPr.Brd.Right       = oPr.pBdr.right   ? DocBorderFromJSON(oPr.pBdr.right)   : oPr.pBdr.right;
+		oParaPr.Brd.Top         = oPr.pBdr.top     ? DocBorderFromJSON(oPr.pBdr.top)     : oPr.pBdr.top;
+		oParaPr.PStyle          = null;
+		oParaPr.PageBreakBefore = oPr.pageBreakBefore;
+		oParaPr.Shd             = oPr.shd  ? ShadeFromJSON(oPr.shd) : oPr.shd;
+		oParaPr.Tabs            = oPr.tabs ? TabsFromJSON(oPr.tabs) : oPr.tabs;
+		oParaPr.WidowControl    = oPr.widowControl;
+
+		return oParaPr;
+	};
+	function HyperlinkFromJSON(oParsedLink)
+	{
+		var aContent = oParsedLink.content;   
+		var oHyper   = new AscCommonWord.ParaHyperlink();
+
+		// Заполняем гиперссылку полями
+		if (undefined !== oParsedLink.anchor && null !== oParsedLink.anchor)
+		{
+			oHyper.SetAnchor(oParsedLink.anchor);
+			oHyper.SetValue("")
+		}
+		else if (undefined != oParsedLink.value && null != oParsedLink.value)
+		{
+			oHyper.SetValue(oParsedLink.value);
+			oHyper.SetAnchor("");
+		}
+		if (undefined != oParsedLink.toolTip && null != oParsedLink.toolTip)
+			oHyper.SetToolTip(oParsedLink.toolTip);
+
+
+		for (var nElm = 0; nElm < aContent.length; nElm++)
+		{
+			switch(aContent[nElm].type)
+			{
+				case "run":
+				case "mathRun":
+					oHyper.AddToContent(oHyper.Content.length, ParaRunFromJSON(aContent[nElm]));
+			}
+		}
+
+		return oHyper;
+	};
+	function InlineLvlSdtFromJSON(oParsedSdt)
+	{
+		var oContentControl = new AscCommonWord.CInlineLevelSdt();
+		var aContent        = oParsedSdt.content;
+
+		oContentControl.Pr = SdtPrFromJSON(oParsedSdt.sdtPr);
+
+		for (var nElm = 0; nElm < aContent.length; nElm++)
+		{
+			switch (aContent[nElm].type)
+			{
+				case "run":
+				case "mathRun":
+					oContentControl.AddToContent(oContentControl.Content.length, ParaRunFromJSON(aContent[nElm]));
+					break;
+				case "hyperlink":
+					oContentControl.AddToContent(oContentControl.Content.length, HyperlinkFromJSON(aContent[nElm]));
+					break;
+			}
+		}
+
+		return oContentControl;
+	};
+	function BlockLvlSdtFromJSON(oParsedSdt)
+	{
+		var oContentControl     = new AscCommonWord.CBlockLevelSdt(private_GetLogicDocument(), private_GetLogicDocument());
+		
+		oContentControl.Pr      = SdtPrFromJSON(oParsedSdt.sdtPr);
+		oContentControl.Content = DocContentFromJSON(oParsedSdt.sdtContent, oContentControl);
+
+		return oContentControl;
+	};
+	function DocContentFromJSON(oParsedDocContent, oParent)
+	{
+		var oDocContent = new AscCommonWord.CDocumentContent(oParent ? oParent : private_GetLogicDocument(), private_GetDrawingDocument(), 0, 0, 0, 0, true, false, false);
+		var aContent    = oParsedDocContent.content;
+	
+		for (var nElm = 0; nElm < aContent.length; nElm++)
+		{
+			switch (aContent[nElm].type)
+			{
+				case "paragraph":
+					oDocContent.AddToContent(oDocContent.Content.length, ParagraphFromJSON(aContent[nElm]));
+					break;
+				case "table":
+					oDocContent.AddToContent(oDocContent.Content.length, TableFromJSON(aContent[nElm]));
+					break;
+				case "blockLvlSdt":
+					oDocContent.AddToContent(oDocContent.Content.length, BlockLvlSdtFromJSON(aContent[nElm]));
+					break;
+			}
+		}
+
+		// удаляем параграф, который добавляется при создании CDocumentContent
+		oDocContent.RemoveFromContent(0, 1);
+
+		return oDocContent;
+	};
+	function SdtPrFromJSON(oParsedSdtPr)
+	{
+		var oSdtPr = new AscCommonWord.CSdtPr();
+		
+		oSdtPr.Alias = oParsedSdtPr.alias;
+
+		// comboboxPr
+		if (oParsedSdtPr.comboBox)
+		{
+			var oComboboxPr   = new AscCommon.CSdtComboBoxPr();
+			var oTempListItem = null;
+
+			oComboboxPr.LastValue = oParsedSdtPr.comboBox.lastValue;
+			for (var nItem = 0; nItem < oParsedSdtPr.comboBox.listItem.length; nItem++)
+			{
+				oTempListItem             = new CSdtListItem();
+				oTempListItem.DisplayText = oParsedSdtPr.comboBox.listItem[nItem].displayText;
+				oTempListItem.Value       = oParsedSdtPr.comboBox.listItem[nItem].value;
+				
+				oComboboxPr.ListItems.push(oTempListItem);
+			}
+
+			oSdtPr.ComboBox = oComboboxPr;
+		}
+
+		// date
+		if (oParsedSdtPr.date)
+		{
+			var oDate = new AscCommon.CSdtDatePickerPr();
+
+			oDate.FullDate   = oParsedSdtPr.date.fullDate;
+			oDate.LangId     = oParsedSdtPr.date.lid;
+			oDate.DateFormat = oParsedSdtPr.date.dateFormat;
+			oDate.Calendar   = oParsedSdtPr.date.calendar;
+
+			oSdtPr.Date = oDate;
+		}
+
+		// docPartObj
+		oSdtPr.DocPartObj.Gallery  = oParsedSdtPr.docPartObj["docPartGallery"];
+		oSdtPr.DocPartObj.Category = oParsedSdtPr.docPartObj["docPartCategory"];
+		oSdtPr.DocPartObj.Unique   = oParsedSdtPr.docPartObj["docPartUnique"];
+
+		// dropdown
+		if (oParsedSdtPr.comboBox)
+		{
+			var oDropDownPr   = new AscCommon.CSdtComboBoxPr();
+			var oTempListItem = null;
+
+			oDropDownPr.LastValue = oParsedSdtPr.dropDownList.lastValue;
+			for (var nItem = 0; nItem < oParsedSdtPr.dropDownList.listItem.length; nItem++)
+			{
+				oTempListItem             = new CSdtListItem();
+				oTempListItem.DisplayText = oParsedSdtPr.dropDownList.listItem[nItem].displayText;
+				oTempListItem.Value       = oParsedSdtPr.dropDownList.listItem[nItem].value;
+				
+				oDropDownPr.ListItems.push(oTempListItem);
+			}
+
+			oSdtPr.DropDown = oDropDownPr;
+		}
+
+		// lock type
+		var nLockType = undefined;
+		switch (oSdtPr.Lock)
+		{
+			case "contentLocked":
+				nLockType = Asc.c_oAscSdtLockType.ContentLocked;
+				break;
+			case "sdtContentLocked":
+				nLockType = Asc.c_oAscSdtLockType.SdtContentLocked;
+				break;
+			case "sdtLocked":
+				nLockType = Asc.c_oAscSdtLockType.SdtLocked;
+				break;
+			case "unlocked":
+				nLockType = Asc.c_oAscSdtLockType.Unlocked;
+				break;
+		}
+		oSdtPr.Equation      = oParsedSdtPr.equation;
+		oSdtPr.Id            = oParsedSdtPr.id;
+		oSdtPr.Label         = oParsedSdtPr.label;
+		oSdtPr.Lock          = nLockType;
+		oSdtPr.Picture       = oParsedSdtPr.picture;
+		oSdtPr.Placeholder   = oParsedSdtPr.placeholder.docPart;
+		oSdtPr.TextPr        = TextPrFromJSON(oParsedSdtPr.rPr);
+		oSdtPr.ShowingPlcHdr = oParsedSdtPr.showingPlcHdr;
+		oSdtPr.Tag           = oParsedSdtPr.tag;
+		oSdtPr.Temporary     = oParsedSdtPr.temporary;
+		oSdtPr.Text          = oParsedSdtPr.text.multiLine;
+
+		return oSdtPr;
+	};
+	function TabsFromJSON(oTabs)
+	{
+		var oTabsObj = new CParaTabs();
+
+		for (var nTab = 0; nTab < oTabs.tabs.length; nTab++)
+			oTabsObj.Tabs.push(new CParaTab(oTabs.tabs[nTab].val, private_Twips2MM(oTabs.tabs[nTab].pos), oTabs.tabs[nTab].leader));
+
+		return oTabsObj;
+	};
+	function DocBorderFromJSON(oBorder)
+	{
+		var oBorderObj = new CDocumentBorder();
+
+		oBorderObj.Color.r    = oBorder.color.r;
+		oBorderObj.Color.g    = oBorder.color.g;
+		oBorderObj.Color.b    = oBorder.color.b;
+		oBorderObj.Color.Auto = oBorder.color.auto;
+
+		oBorderObj.Size  = private_Twips2MM(oBorder.sz);
+		oBorderObj.Space = private_Twips2MM(oBorder.space);
+		oBorderObj.Value = oBorder.value === "none" ? border_None : border_Single;
+
+		oBorderObj.LineRef    = oBorder.lineRef    ? StyleRefFromJSON(oBorder.lineRef) : oBorder.lineRef;
+		oBorderObj.Unifill    = oBorder.themeColor ? FillFromJSON(oBorder.themeColor)  : oBorder.themeColor;
+
+		return oBorderObj;
+	};
+	function StyleRefFromJSON(oStyleRef)
+	{
+		var oStyleRefObj = new AscFormat.StyleRef();
+		
+		if (oStyleRef.lineRef)
+		{
+			oStyleRefObj.idx   = oStyleRef.idx;
+			oStyleRefObj.Color = ColorFromJSON(oStyleRef.color);
+		}
+		
+		return oStyleRefObj;
+	};
+	function FillFromJSON(oFill)
+	{
+		var oFillObj = new AscFormat.CUniFill();
+		if (oFill.type)
+		{
+			switch (oFill.fill.type)
+			{
+				case "none":
+					oFillObj.fill = null;
+					break;
+				case "solid":
+					oFillObj.fill       = new AscFormat.CSolidFill();
+					oFillObj.fill.color = ColorFromJSON(oFill.fill.color);
+					break;
+				case "blipFill":
+					oFillObj.fill = BlipFillFromJSON(oFill.fill);
+					break;
+				case "noFill":
+					oFillObj.fill = new AscFormat.CNoFill();
+					break;
+				case "gradFill":
+					oFillObj.fill = GradFillFromJSON(oFill.fill);
+					break;
+				case "pattFill":
+					oFillObj.fill = PattFillFromJSON(oFill.fill);
+					break;
+				case "grp":
+					oFillObj.fill = new AscFormat.CGrpFill();
+					break;
+			}
+		}
+
+		return oFillObj;
+	};
+	function ColorFromJSON(oColor)
+	{
+
+		var oRGBA = oColor.color ? {
+			R:   oColor.rgba.red,
+			G:   oColor.rgba.green,
+			B:   oColor.rgba.blue,
+			A:   oColor.rgba.alpha 
+		} : oColor.color;
+
+		var oColorObj  = new AscFormat.CUniColor();
+		oColorObj.RGBA = oRGBA;
+
+		if (oColor.color.type)
+		{
+			switch (oColor.color.type)
+			{
+				case "none":
+					oColorObj.color = null;
+					break;
+				case "srgb":
+				{
+					oColorObj.color   = new AscFormat.CRGBColor();
+					oColorObj.color.RGBA.R = oColor.color.rgba.red;
+					oColorObj.color.RGBA.G = oColor.color.rgba.green;
+					oColorObj.color.RGBA.B = oColor.color.rgba.blue;
+					oColorObj.color.RGBA.A = oColor.color.rgba.alpha;
+
+
+					break;
+				}
+				case "prst":
+				{
+					oColorObj.color    = new AscFormat.CPrstColor();
+					oColorObj.color.RGBA.R  = oColor.color.rgba.red;
+					oColorObj.color.RGBA.G  = oColor.color.rgba.green;
+					oColorObj.color.RGBA.B  = oColor.color.rgba.blue;
+					oColorObj.color.RGBA.A  = oColor.color.rgba.alpha;
+					oColorObj.color.id = oColor.color.id;
+					break;
+				}
+				case "scheme":
+				{
+					oColorObj.color    = new AscFormat.CSchemeColor();
+					oColorObj.color.RGBA.R  = oColor.color.rgba.red;
+					oColorObj.color.RGBA.G  = oColor.color.rgba.green;
+					oColorObj.color.RGBA.B  = oColor.color.rgba.blue;
+					oColorObj.color.RGBA.A  = oColor.color.rgba.alpha;
+					oColorObj.color.id = oColor.color.id;
+					break;
+				}
+				case "sys":
+				{
+					oColorObj.color    = new AscFormat.CSysColor();
+					oColorObj.color.RGBA.R  = oColor.color.rgba.red;
+					oColorObj.color.RGBA.G  = oColor.color.rgba.green;
+					oColorObj.color.RGBA.B  = oColor.color.rgba.blue;
+					oColorObj.color.RGBA.A  = oColor.color.rgba.alpha;
+					oColorObj.color.id = oColor.color.id;
+					break;
+				}
+				case "style":
+				{
+					oColorObj.color       = new AscFormat.CStyleColor();
+					oColorObj.color.bAuto = oColor.color.auto;
+					oColorObj.color.val   = oColor.color.val;
+					break;
+				}
+			}
+		}
+
+		if (oColor.mods.length !== 0)
+		{
+			oColor.Color.Mods = new AscFormat.CColorModifiers();
+
+			for (var nMod = 0; nMod < oStyleRef.mods.length; nMod++)
+			{
+				var oMod  = new AscFormat.CColorMod();
+				oMod.name = oStyleRef.mods[nMod].name;
+				oMod.val  = oStyleRef.mods[nMod].val;
+
+				oColorObj.Color.Mods.push(oMod);
+			}
+		}
+
+		return oColorObj;
+	};
+	function BlipFillFromJSON(oParsedFill)
+	{
+		var oBlipFill = new AscFormat.CBlipFill();
+
+		if (oParsedFill.srcRect)
+		{
+			oBlipFill.srcRect   = new AscFormat.CSrcRect();
+			oBlipFill.srcRect.b = oParsedFill.srcRect.b;
+			oBlipFill.srcRect.l = oParsedFill.srcRect.l;
+			oBlipFill.srcRect.r = oParsedFill.srcRect.r;
+			oBlipFill.srcRect.t = oParsedFill.srcRect.t;
+		}
+		oBlipFill.stretch = oParsedFill.stretch;
+
+		if (oParsedFill.tile)
+		{
+			oBlipFill.tile      = new AscFormat.CBlipFillTile();
+			oBlipFill.tile.tx   = oParsedFill.tx;
+			oBlipFill.tile.ty   = oParsedFill.ty;
+			oBlipFill.tile.sx   = oParsedFill.sx;
+			oBlipFill.tile.sy   = oParsedFill.sy;
+			oBlipFill.tile.flip = oParsedFill.flip;
+			oBlipFill.tile.algn = oParsedFill.algn;
+		}
+
+		oBlipFill.Effects        = EffectDagFromJSON(oParsedEffects);
+		oParsedFill.rotWithShape = oParsedFill.rotWithShape;
+
+		return oBlipFill;
+	};
+
+	function EffectDagFromJSON(oParsedEff)
+	{
+		var oEffect = null;
+
+		switch (oParsedEff.type)
+		{
+			case "alphaBiLvl":
+				oEffect              = new AscFormat.CAlphaBiLevel();
+				oEffect.tresh        = oParsedEff.thresh;
+				return oEffect;
+			case "alphaCeiling":
+				oEffect              = new AscFormat.CAlphaCeiling();
+				return oEffect;
+			case "alphaFloor":
+				oEffect              = new AscFormat.CAlphaFloor();
+				return oEffect;
+			case "alphaInv":
+				oEffect              = new AscFormat.CAlphaInv();
+				oEffect.unicolor     = ColorFromJSON(oParsedEff.color);
+				return oEffect;
+			case "alphaMod":
+				oEffect              = new AscFormat.CAlphaMod();
+				oEffect.cont         = EffectContainerFromJSON(oParsedEff.cont);
+				return oEffect;
+			case "alphaModFix":
+				oEffect              = new AscFormat.CAlphaModFix();
+				oEffect.amt          = oParsedEff.amt;
+				return oEffect;
+			case "alphaOutset":
+				oEffect              = new AscFormat.CAlphaOutset();
+				oEffect.rad          = oParsedEff.rad;
+				return oEffect;
+			case "alphaRepl":
+				oEffect              = new AscFormat.CAlphaRepl();
+				oEffect.a            = oParsedEff.a;
+				return oEffect;
+			case "biLvl":
+				oEffect              = new AscFormat.CBiLevel();
+				oEffect.thresh       = oParsedEff.thresh;
+				return oEffect;
+			case "blend":
+				oEffect              = new AscFormat.CBlend();
+				oEffect.cont         = EffectContainerFromJSON(oParsedEff.cont);
+				oEffect.blend        = oParsedEff.blend;
+				return oEffect;
+			case "blur":
+				oEffect              = new AscFormat.CBlur();
+				oEffect.grow         = oParsedEff.grow;
+				oEffect.rad          = oParsedEff.rad;
+				return oEffect;
+			case "clrChange":
+				oEffect              = new AscFormat.CClrChange();
+				oEffect.clrFrom      = ColorFromJSON(oParsedEff.clrFrom);
+				oEffect.clrTo        = ColorFromJSON(oParsedEff.clrTo);
+				oEffect.useA         = oParsedEff.useA;
+				return oEffect;
+			case "clrRepl":
+				oEffect              = new AscFormat.CClrRepl();
+				oEffect.color        = ColorFromJSON(oParsedEff.color);
+				return oEffect;
+			case "effCont":
+				oEffect              = new AscFormat.CEffectContainer();
+				oEffect.cont         = EffectContainerFromJSON(oParsedEff.cont);
+				return oEffect;
+			case "duotone":
+				oEffect              = new AscFormat.CDuotone();
+				for (var nColor = 0; nColor < oParsedEff.colors.length; nColor++)
+					oEffect.colors.push(ColorFromJSON(oParsedEff.colors[nColor]));
+				return oEffect;
+			case "effect":
+				oEffect              = new AscFormat.CEffectElement();
+				oEffect.ref          = oParsedEff.ref;
+				return oEffect;
+			case "fill":
+				oEffect              = new AscFormat.CFillEffect();
+				oEffect.fill         = FillFromJSON(oParsedEff.fill);
+				return oEffect;
+			case "fillOvrl":
+				oEffect              = new AscFormat.CFillOverlay();
+				oEffect.fill         = FillFromJSON(oParsedEff.fill);
+				oEffect.blend        = oParsedEff.blend;
+				return oEffect;
+			case "glow":
+				oEffect              = new AscFormat.CGlow();
+				oEffect.color        = ColorFromJSON(oParsedEff.color);
+				oEffect.rad          = oParsedEff.rad;
+				return oEffect;
+			case "gray":
+				oEffect              = new AscFormat.CGrayscl();
+				return oEffect;
+			case "hsl":
+				oEffect              = new AscFormat.CHslEffect();
+				oEffect.h            = oParsedEff.hue;
+				oEffect.l            = oParsedEff.lum;
+				oEffect.s            = oParsedEff.sat;
+				return oEffect;
+			case "innerShdw":
+				oEffect              = new AscFormat.CInnerShdw();
+				oEffect.color        = ColorFromJSON(oParsedEff.color);
+				oEffect.blurRad      = oParsedEff.blurRad;
+				oEffect.dir          = oParsedEff.dir;
+				oEffect.dist         = oParsedEff.dist;
+				return oEffect;
+			case "lum":
+				oEffect              = new AscFormat.CLumEffect();
+				oEffect.bright       = oParsedEff.bright;
+				oEffect.contrast     = oParsedEff.contrast;
+				return oEffect;
+			case "outerShdw":
+				oEffect              = new AscFormat.COuterShdw();
+				oEffect.color        = ColorFromJSON(oParsedEff.color);
+				oEffect.algn         = oParsedEff.algn;
+				oEffect.blurRad      = oParsedEff.blurRad;
+				oEffect.dir          = oParsedEff.dir;
+				oEffect.dist         = oParsedEff.dist;
+				oEffect.kx           = oParsedEff.kx;
+				oEffect.ky           = oParsedEff.ky;
+				oEffect.rotWithShape = oParsedEff.rotWithShape;
+				oEffect.sx           = oParsedEff.sx;
+				oEffect.sy           = oParsedEff.sy;
+				return oEffect;
+			case "prstShdw":
+				oEffect              = new AscFormat.CPrstShdw();
+				oEffect.color        = ColorFromJSON(oParsedEff.color);
+				oEffect.dir          = oParsedEff.dir;
+				oEffect.dis          = oParsedEff.dist;
+				oEffect.prst         = oParsedEff.prst;
+				return oEffect;
+			case "reflection":
+				oEffect              = new AscFormat.CReflection();
+				oEffect.algn         = oParsedEff.algn;
+				oEffect.blurRad      = oParsedEff.blurRad;
+				oEffect.dir          = oParsedEff.dir;
+				oEffect.dist         = oParsedEff.dist;
+				oEffect.endA         = oParsedEff.endA;
+				oEffect.endPos       = oParsedEff.endPos;
+				oEffect.fadeDir      = oParsedEff.fadeDir;
+				oEffect.kx           = oParsedEff.kx;
+				oEffect.ky           = oParsedEff.ky;
+				oEffect.rotWithShape = oParsedEff.rotWithShape;
+				oEffect.stA          = oParsedEff.stA;
+				oEffect.stPos        = oParsedEff.stPos;
+				oEffect.sx           = oParsedEff.sx;
+				oEffect.sy           = oParsedEff.sy;
+				return oEffect;
+			case "relOff":
+				oEffect              = new AscFormat.CRelOff();
+				oEffect.tx           = oParsedEff.tx;
+				oEffect.ty           = oParsedEff.ty;
+				return oEffect;
+			case "softEdge":
+				oEffect              = new AscFormat.CSoftEdge();
+				oEffect.rad          = oParsedEff.rad;
+				return oEffect;
+			case "tint":
+				oEffect              = new AscFormat.CTintEffect();
+				oEffect.amt          = oParsedEff.amt;
+				oEffect.hue          = oParsedEff.hue;
+				return oEffect;
+			case "xfrm":
+				oEffect              = new AscFormat.CXfrmEffect();
+				oEffect.kx           = oParsedEff.kx;
+				oEffect.ky           = oParsedEff.ky;
+				oEffect.sx           = oParsedEff.sx;
+				oEffect.sy           = oParsedEff.sy;
+				oEffect.tx           = oParsedEff.tx;
+				oEffect.ty           = oParsedEff.ty;
+				return oEffect;
+		}
+	};
+	function EffectContainerFromJSON(oParsedCont)
+	{
+		var oEffectContainer = new AscFormat.CEffectContainer();
+
+		oEffectContainer.type = oParsedCont.type;
+		oEffectContainer.name = oParsedCont.name;
+
+		for (var nEffect = 0; nEffect < oParsedCont.effectList.length; nEffect++)
+			oEffectContainer.push(EffectDagFromJSON(oParsedCont.effectList[nEffect]));
+
+		return oEffectContainer;
+	};
+	function EffectLstFromJSON(oParsedLst)
+	{
+		var oEffectLst = new AscFormat.CEffectLst();
+
+		oEffectLst.blur        = oParsedLst.blur        ? EffectDagFromJSON(oParsedLst.blur)        : oParsedLst.blur;
+		oEffectLst.fillOverlay = oParsedLst.fillOverlay ? EffectDagFromJSON(oParsedLst.fillOverlay) : oParsedLst.fillOverlay;
+		oEffectLst.innerShdw   = oParsedLst.innerShdw   ? EffectDagFromJSON(oParsedLst.innerShdw)   : oParsedLst.innerShdw;
+		oEffectLst.outerShdw   = oParsedLst.outerShdw   ? EffectDagFromJSON(oParsedLst.outerShdw)   : oParsedLst.outerShdw;
+		oEffectLst.prstShdw    = oParsedLst.prstShdw    ? EffectDagFromJSON(oParsedLst.prstShdw)    : oParsedLst.prstShdw;
+		oEffectLst.reflection  = oParsedLst.reflection  ? EffectDagFromJSON(oParsedLst.reflection)  : oParsedLst.reflection;
+		oEffectLst.softEdge    = oParsedLst.softEdge    ? EffectDagFromJSON(oParsedLst.softEdge)    : oParsedLst.softEdge;
+
+		return oEffectLst;
+	};
 
 	/**
 	 * Class representing a container for paragraphs and tables.
@@ -10082,6 +11072,7 @@
 	{
 		return JSON.stringify(SerParaRun(this.Run));
 	};
+		
 	//------------------------------------------------------------------------------------------------------------------
 	//
 	// ApiSection
@@ -15496,7 +16487,7 @@
 	 */
 	ApiInlineLvlSdt.prototype.ToJSON = function()
 	{
-		return JSON.stringify(this.Sdt);
+		return JSON.stringify(SerInlineLvlSdt(this.Sdt));
 	};
 
 	//------------------------------------------------------------------------------------------------------------------
@@ -16282,6 +17273,30 @@
 
 		this.asc_coAuthoringChatSendMessage(sString);
 		return true;
+	};
+	/**
+	 * Convert from JSON to object.
+	 * @memberof Api
+	 * @typeofeditors ["CDE"]
+	 */
+	Api.prototype.FromJSON = function(sMessage)
+	{
+		var oParsedObj  = JSON.parse(sMessage);
+
+		switch (oParsedObj.type)
+		{
+			case "run":
+			case "mathRun":
+				return new ApiRun(ParaRunFromJSON(oParsedObj));
+			case "paragraph":
+				return new ApiParagraph(ParagraphFromJSON(oParsedObj));
+			case "hyperlink":
+				return new ApiHyperlink(HyperlinkFromJSON(oParsedObj));
+			case "inlineLvlSdt":
+				return new ApiInlineLvlSdt(InlineLvlSdtFromJSON(oParsedObj));
+			case "blockLvlSdt":
+				return new ApiBlockLvlSdt(BlockLvlSdtFromJSON(oParsedObj));
+		}
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
