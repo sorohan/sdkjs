@@ -32,7 +32,7 @@
 
 "use strict";
 
-window.startPluginApi = function() {
+
 
 	/***********************************************************************
 	 * CONFIG
@@ -55,23 +55,22 @@ window.startPluginApi = function() {
 	 * */
 
 	/**
-	 * @typedef { Object } variationButton
+	 * @typedef {Object} variationButton
 	 * @property {string} text Label
 	 * @property {boolean} [primary] Is button use primary css style
-	 * @proverty {boolean} [isViewer] Is button shown in viewer mode
+	 * @property {boolean} [isViewer] Is button shown in viewer mode
 	 * @property {localeTranslate} [textLocale] Translations for text field
 	 */
 
 	/**
-	 * @typedef { Object } variation
-	 * @description Why would one plugin might need some variations? The answer is simple enough: the plugin can not only perform some actions but also contain some settings, or 'About' window, or something like that. For example, translation plugin: the plugin itself does not need a visual window for translation as it can be done just pressing a single button, but its settings (the translation direction) and 'About' window must be visual. So we will need to have at least two plugin variations (translation itself and settings), or three, in case we want to add an 'About' window with the information about the plugin and its authors or the software used for the plugin creation.
-	 *
+	 * Why would one plugin might need some variations? The answer is simple enough: the plugin can not only perform some actions but also contain some settings, or 'About' window, or something like that. For example, translation plugin: the plugin itself does not need a visual window for translation as it can be done just pressing a single button, but its settings (the translation direction) and 'About' window must be visual. So we will need to have at least two plugin variations (translation itself and settings), or three, in case we want to add an 'About' window with the information about the plugin and its authors or the software used for the plugin creation.
+	 * @typedef {Object} variation
 	 * @property {string} description Name
 	 * @property {localeTranslate} [descriptionName] Translations for description field
 	 *
 	 * @property {string} url Plugin entry point, i.e. HTML file which connects the plugin.js (the base file needed for work with plugins) file and launches the plugin code.
 	 *
-	 * @proverty {string[]} icons Plugin icon image files used in the editors: for common screens and with doubled resolution for retina screens.
+	 * @property {string[]} icons Plugin icon image files used in the editors: for common screens and with doubled resolution for retina screens.
 	 *
 	 * @property {boolean} isViewer=false Specifies if the plugin is available when the document is available in viewer mode only or not.
 	 * @property {editorType[]} EditorsSupport=Array.<string>("word","cell","slide") The editors which the plugin is available for ("word" - text document editor, "cell" - spreadsheet editor, "slide" - presentation editor).
@@ -125,95 +124,91 @@ window.startPluginApi = function() {
 	 */
 
 	/**
-	 * Event: init
-	 * @event Plugin#init
+	 * The function called when the plugin is launched. It defines the data sent to the plugin describing what actions are to be performed and how they must be performed.
+	 * @callback init
+	 * @param {string} text Defines the data parameter that depends on the initDataType setting specified in the config.json file. The type of the data is as follows: none - an empty string, text - the text of the selected document, html - a fragment of the selected document, ole - the data of the OLE object.
 	 * @memberof Plugin
 	 * @alias init
-	 * @param {string} text
 	 */
 
 	/**
-	 * Event: button
-	 * @event Plugin#button
+	 * The method invokes pressing of a button in a window with a plugin. The button is an index in the list (see config.json).
+	 * @callback button
+	 * @param {number} buttonIndex
 	 * @memberof Plugin
 	 * @alias button
-	 * @description The method invokes pressing of a button in a window with a plugin. The button is an index in the list (see config.json).
-	 * @param {number} buttonIndex
 	 */
 
 	/**
 	 * Event: onTargetPositionChanged
-	 * @event Plugin#event_onTargetPositionChanged
+	 * @callback event_onTargetPositionChanged
 	 * @memberof Plugin
 	 * @alias event_onTargetPositionChanged
 	 */
 
 	/**
 	 * Event: onDocumentContentReady
-	 * @event Plugin#event_onDocumentContentReady
+	 * @callback event_onDocumentContentReady
 	 * @memberof Plugin
 	 * @alias event_onDocumentContentReady
 	 */
 
 	/**
 	 * Event: onClick
-	 * @event Plugin#event_onClick
+	 * @callback event_onClick
 	 * @memberof Plugin
 	 * @alias event_onClick
 	 */
 
 	/**
 	 * Event: inputHelper_onSelectItem
-	 * @event Plugin#event_inputHelper_onSelectItem
+	 * @callback event_inputHelper_onSelectItem
 	 * @memberof Plugin
 	 * @alias event_inputHelper_onSelectItem
 	 */
 
 	/**
 	 * Event: onInputHelperClear
-	 * @event Plugin#event_onInputHelperClear
+	 * @callback event_onInputHelperClear
 	 * @memberof Plugin
 	 * @alias event_onInputHelperClear
 	 */
 
 	/**
 	 * Event: onInputHelperInput
-	 * @event Plugin#event_onInputHelperInput
+	 * @callback event_onInputHelperInput
 	 * @memberof Plugin
 	 * @alias event_onInputHelperInput
 	 */
 
 	/**
 	 * Event: onTranslate
-	 * @event Plugin#onTranslate
+	 * @callback onTranslate
 	 * @memberof Plugin
 	 * @alias onTranslate
 	 */
 
     /**
-     * Event: onEnableMouseEvent
-     * @event Plugin#onEnableMouseEvent
+     * The method turns off/on mouse/touchpad events.
+     * @callback onEnableMouseEvent
+		 * @param {boolean} isEnabled
      * @memberof Plugin
      * @alias onEnableMouseEvent
-	 * @description The method turns off/on mouse/touchpad events.
-	 * @param {boolean} isEnabled
      */
 
     /**
-     * Event: onExternalMouseUp
-     * @event Plugin#onExternalMouseUp
+     * The method indicates that the mouse/touchpad event was completed outside the plugin while started inside the plugin.
+     * @callback onExternalMouseUp
      * @memberof Plugin
      * @alias onExternalMouseUp
-	 * @description The method indicates that the mouse/touchpad event was completed outside the plugin while started inside the plugin.
      */
 
     /**
-     * Event: onExternalPluginMessage
-     * @event Plugin#onExternalPluginMessage
+     * The method shows the editor integrator message (see externallistener plugin).
+     * @callback onExternalPluginMessage
+     * @param {Object} data
      * @memberof Plugin
      * @alias onExternalPluginMessage
-     * @description The method shows the editor integrator message (see externallistener plugin).
-     * @param {Object} data
      */
 
 
@@ -239,7 +234,7 @@ window.startPluginApi = function() {
      * @param {string} data Script code
      * @param {Function} callback
 	 */
-	Plugin.executeCommand = function(type, data, callback)
+	Plugin.prototype.executeCommand = function(type, data, callback)
     {
         window.Asc.plugin.info.type = type;
         window.Asc.plugin.info.data = data;
@@ -269,7 +264,7 @@ window.startPluginApi = function() {
 	 * @param {Array} params Array with calling parameters
      * @param {Function} callback Callback function
 	 */
-	Plugin.executeMethod = function(name, params, callback)
+	Plugin.prototype.executeMethod = function(name, params, callback)
     {
         if (window.Asc.plugin.isWaitMethod === true)
         {
@@ -313,7 +308,7 @@ window.startPluginApi = function() {
      * @param {number} maxW New max-width of the window
 	 * @param {number} maxH New max-height of the window
 	 */
-	Plugin.resizeWindow = function(width, height, minW, minH, maxW, maxH)
+	Plugin.prototype.resizeWindow = function(width, height, minW, minH, maxW, maxH)
     {
         if (undefined === minW) minW = 0;
         if (undefined === minH) minH = 0;
@@ -355,11 +350,11 @@ window.startPluginApi = function() {
      * Note: in the "func" code it is not allowed to use external plugin variables.
      * If it is necessary, you need to export the variable in Asc.scope object, and use it the function code
 	 * @param {Function} func Function to call
-	 * @param {boolean} isClose
-     * @param {boolean} isCalc
-	 * @param {Function} callback Callback function
+	 * @param {boolean} [isClose=undefined]
+     * @param {boolean} [isCalc=undefined]
+	 * @param {Function} [callback=undefined] Callback function
 	 */
-	Plugin.callCommand = function(func, isClose, isCalc, callback)
+	Plugin.prototype.callCommand = function(func, isClose, isCalc, callback)
     {
         var _txtFunc = "var Asc = {}; Asc.scope = " + JSON.stringify(window.Asc.scope) + "; var scope = Asc.scope; (" + func.toString() + ")();";
         var _type = (isClose === true) ? "close" : "command";
@@ -378,7 +373,7 @@ window.startPluginApi = function() {
 	 * @param {Function} callback Callback function
 	 * @param {boolean} isClose
 	 */
-	Plugin.callModule = function(url, callback, isClose)
+	Plugin.prototype.callModule = function(url, callback, isClose)
     {
         var _isClose = isClose;
         var _client = new XMLHttpRequest();
@@ -406,7 +401,7 @@ window.startPluginApi = function() {
      * @param {string} url Url to resource code
 	 * @param {Function} callback Callback function
 	 */
-	Plugin.loadModule = function(url, callback)
+	Plugin.prototype.loadModule = function(url, callback)
     {
         var _client = new XMLHttpRequest();
         _client.open("GET", url);
@@ -432,51 +427,42 @@ window.startPluginApi = function() {
 	 */
 
 	/**
-	 * @global
-	 * @class
-	 * @name InputHelper
-	 * @hideconstructor
+	 * @typedef {Object} InputHelper
+   * @property {createWindow} createWindow
+   * @property {getItems} getItems
+   * @property {setItems} setItems
+   * @property {show} show
+   * @property {unShow} unShow
+   * @property {getScrollSizes} getScrollSizes
 	 */
 
 	/**
-	 * @function createWindow
-	 * @memberof InputHelper
-	 * @alias createWindow
+	 * @callback createWindow
 	 */
 
 	/**
-	 * @function getItems
-	 * @memberof InputHelper
-	 * @alias getItems
+	 * @callback getItems
 	 * @return {InputHelperItem[]}
 	 */
 
 	/**
-	 * @function setItems
-	 * @memberof InputHelper
-	 * @alias setItems
-	 * @param {InputHelperItem[]}
+	 * @callback setItems
+	 * @param {InputHelperItem[]} items
 	 */
 
 	/**
-	 * @function show
-	 * @memberof InputHelper
-	 * @alias show
+	 * @callback show
 	 * @param {number} width
 	 * @param {number} height
 	 * @param {boolean} isCaptureKeyboard
 	 */
 
 	/**
-	 * @function unShow
-	 * @memberof InputHelper
-	 * @alias unShow
+	 * @callback unShow
 	 */
 
 	/**
-	 * @function getScrollSizes
-	 * @memberof InputHelper
-	 * @alias getScrollSizes
+	 * @callback getScrollSizes
 	 * @return {number}
 	 */
 
@@ -485,7 +471,7 @@ window.startPluginApi = function() {
 	 * @memberof Plugin
 	 * @alias createInputHelper
 	 */
-	Plugin.createInputHelper = function()
+	Plugin.prototype.createInputHelper = function()
     {
         window.Asc.plugin.ih = new window.Asc.inputHelper(window.Asc.plugin);
     };
@@ -495,9 +481,9 @@ window.startPluginApi = function() {
 	 * @alias getInputHelper
 	 * @return {InputHelper} Input helper object
 	 */
-	Plugin.getInputHelper = function()
+	Plugin.prototype.getInputHelper = function()
 	{
 		return window.Asc.plugin.ih;
 	};
 
-};
+
