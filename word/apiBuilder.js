@@ -31,8 +31,7 @@
  */
 
 "use strict";
-(function(window, builder)
-{
+
 	/**
 	 * Base class
 	 * @global
@@ -371,7 +370,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {String} sText
 	 * @param {string} [sPosition = "after"] - can be "before" or "after"
-	 * @return {bool} - returns false if range is empty or sText isn't text.
+	 * @return {boolean} - returns false if range is empty or sText isn't text.
 	 */	
 	ApiRange.prototype.AddText = function(sText, sPosition)
 	{
@@ -428,7 +427,7 @@
 	 * @memberof ApiRange
 	 * @typeofeditors ["CDE"]
 	 * @param {String} sName
-	 * @return {bool} - returns false if range is empty.
+	 * @return {boolean} - returns false if range is empty.
 	 */	
 	ApiRange.prototype.AddBookmark = function(sName)
 	{
@@ -601,7 +600,7 @@
 	 * Set the selection to the specified range.
 	 * @memberof ApiRange
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} [bUpdate = true]
+	 * @param {boolean} [bUpdate = true]
 	 * @typeofeditors ["CDE"]
 	 */	
 	ApiRange.prototype.Select = function(bUpdate)
@@ -784,7 +783,7 @@
 	 * Set the bold property to the text character.
 	 * @memberof ApiRange
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} isBold - Specifies that the contents of this Range are displayed bold.
+	 * @param {boolean} isBold - Specifies that the contents of this Range are displayed bold.
 	 * @returns {ApiRange | null} - returns null if can't apply bold.
 	 */
 	ApiRange.prototype.SetBold = function(isBold)
@@ -828,7 +827,7 @@
 	 * Specify that any lowercase characters in this text Range are formatted for display only as their capital letter character equivalents.
 	 * @memberof ApiRange
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} isCaps - Specifies that the contents of the current Range are displayed capitalized.
+	 * @param {boolean} isCaps - Specifies that the contents of the current Range are displayed capitalized.
 	 * @returns {ApiRange | null} - returns null if can't apply caps.
 	 */
 	ApiRange.prototype.SetCaps = function(isCaps)
@@ -990,7 +989,7 @@
 	 * @param {byte} r - Red color component value.
 	 * @param {byte} g - Green color component value.
 	 * @param {byte} b - Blue color component value.
-	 * @param {bool} [isNone=false] If this parameter is set to "true", then r,g,b parameters will be ignored.
+	 * @param {boolean} [isNone=false] If this parameter is set to "true", then r,g,b parameters will be ignored.
 	 * @returns {ApiRange | null} - returns null if can't apply highlight.
 	 */
 	ApiRange.prototype.SetHighlight = function(r, g, b, isNone)
@@ -1645,7 +1644,7 @@
 	 * Delete all contents of the current range
 	 * @memberof ApiRange
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} - returns false if range is empty.
+	 * @returns {boolean} - returns false if range is empty.
 	 */
 	ApiRange.prototype.Delete = function()
 	{
@@ -1791,7 +1790,7 @@
 	 * Sets the hyperlink address.
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sLink - start character in current element
-	 * @returns {bool} 
+	 * @returns {boolean} 
 	 * */
 	ApiHyperlink.prototype.SetLink = function(sLink)
 	{
@@ -1818,7 +1817,7 @@
 	 * Sets the display text of the hyperlink.
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sDisplay
-	 * @returns {bool} 
+	 * @returns {boolean} 
 	 * */
 	ApiHyperlink.prototype.SetDisplayedText = function(sDisplay)
 	{
@@ -1856,7 +1855,7 @@
 	 * Sets the screen tip text of the hyperlink.
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sScreenTipText - start character in current element
-	 * @returns {bool} 
+	 * @returns {boolean} 
 	 * */
 	ApiHyperlink.prototype.SetScreenTipText = function(sScreenTipText)
 	{
@@ -1945,7 +1944,7 @@
 	/**
 	 * Sets default hyperlink style.
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} 
+	 * @returns {boolean} 
 	 * */
 	ApiHyperlink.prototype.SetDefaultStyle = function()
 	{
@@ -2439,6 +2438,12 @@
 	 *
 	 * @typedef {"unlocked" | "contentLocked" | "sdtContentLocked" | "sdtLocked"} SdtLock
 	 */
+
+	/**
+	 * Property options when inserting content
+	 * @typedef {Object} InsertContentOptions
+	 * @property {boolean} KeepTextOnly - Indicates whether the to keep only the text.
+	 */
 	//------------------------------------------------------------------------------------------------------------------
 	//
 	// Base Api
@@ -2882,7 +2887,7 @@
 	 * @param {String[][]} aList - mail merge data. The first element of the array is the array with names of the merge fields.
 	 * The rest of the array elements are arrays with values for the merge fields.
 	 * @typeofeditors ["CDE"]
-	 * @return {bool}  
+	 * @return {boolean}  
 	 */
 	Api.prototype.LoadMailMergeData = function(aList)
 	{
@@ -3014,8 +3019,8 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {number} nStartIndex
 	 * @param {number} nEndIndex
-	 * @param {bool} bAll - if true -> be mail merge all recipients 
-	 * @returns {bool}
+	 * @param {boolean} bAll - if true -> be mail merge all recipients 
+	 * @returns {boolean}
 	 */
 	Api.prototype.MailMerge = function(nStartIndex, nEndIndex)
 	{
@@ -3057,7 +3062,7 @@
 	 * @param {Array | ApiParagraph | ApiDocument} oElement - may be Document, Paragraph or Run[]
 	 * @param {string} Comment - comment
 	 * @param {string} Autor - autor's name (not obligatory)
-	 * @returns {bool} - returns false if params are invalid.
+	 * @returns {boolean} - returns false if params are invalid.
 	 */
 	Api.prototype.AddComment = function(oElement, Comment, Autor)
 	{
@@ -3240,6 +3245,7 @@
 	 * Get the element by its position in the document.
 	 * @memberof ApiDocumentContent
 	 * @typeofeditors ["CDE", "CSE", "CPE"]
+	 * @param {number} nPos - The position where the current element will be added.
 	 * @returns {?DocumentElement}
 	 */
 	ApiDocumentContent.prototype.GetElement = function(nPos)
@@ -3510,7 +3516,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {DocumentElement[]} arrContent - An array of elements to insert.
 	 * @param {boolean} [isInline=false] - Inline insert or not (works only for the last and the first element and only if it's a paragraph)
-	 * @param {object} [oPr=undefined]
+	 * @param {InsertContentOptions} [oPr=undefined]
 	 * @returns {boolean} Success?
 	 */
 	ApiDocument.prototype.InsertContent = function(arrContent, isInline, oPr)
@@ -3824,7 +3830,7 @@
 	 * @memberof ApiDocument
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sName - bookmark name
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */
 	ApiDocument.prototype.DeleteBookmark = function(sName)
 	{
@@ -3841,7 +3847,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {string} Comment - comment
 	 * @param {string} Autor - autor's name (not obligatory)
-	 * @returns {bool} - returns false if params are invalid.
+	 * @returns {boolean} - returns false if params are invalid.
 	 */
 	ApiDocument.prototype.AddComment = function(Comment, Autor)
 	{
@@ -4016,7 +4022,7 @@
 	 * @memberof ApiDocument
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiDocument.prototype.Search = function(sText, isMatchCase)
@@ -4326,7 +4332,7 @@
 	 * Deletes current paragraph.
 	 * @memberof ApiParagraph
 	 * @typeofeditors ["CDE", "CSE", "CPE"]
-	 * @returns {bool} - returns false if paragraph haven't parent.
+	 * @returns {boolean} - returns false if paragraph haven't parent.
 	 */
 	ApiParagraph.prototype.Delete = function()
 	{
@@ -4477,7 +4483,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {string} Comment - comment
 	 * @param {string} Autor - autor's name (not obligatory)
-	 * @returns {bool} - returns false if params are invalid.
+	 * @returns {boolean} - returns false if params are invalid.
 	 */
 	ApiParagraph.prototype.AddComment = function(Comment, Autor)
 	{
@@ -5159,7 +5165,7 @@
 	 * @memberof ApiParagraph
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiTextPr} oTextPr
-	 * @return {bool} - returns false if param is invalid.
+	 * @return {boolean} - returns false if param is invalid.
 	 */
 	ApiParagraph.prototype.SetTextPr = function(oTextPr)
 	{
@@ -5211,7 +5217,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {string | ApiParagraph} paragraph - text or paragraph
 	 * @param {string} sPosition - can be "after" or "before"
-	 * @param {bool} beRNewPara - if "true" - returns new paragraph, else returns this paragraph.
+	 * @param {boolean} beRNewPara - if "true" - returns new paragraph, else returns this paragraph.
 	 * @return {ApiParagraph | null} - returns null if param paragraph is invalid. 
 	 */
 	ApiParagraph.prototype.InsertParagraph = function(paragraph, sPosition, beRNewPara)
@@ -5254,7 +5260,7 @@
 	 * Select a paragraph.
 	 * @memberof ApiParagraph
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} 
+	 * @return {boolean} 
 	 */
 	ApiParagraph.prototype.Select = function()
 	{
@@ -5302,7 +5308,7 @@
 	 * @memberof ApiParagraph
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiParagraph.prototype.Search = function(sText, isMatchCase)
@@ -5488,7 +5494,7 @@
 	 * @memberof ApiRun
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiDrawing} oDrawing - The object which will be added to the current run.
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */ 
 	ApiRun.prototype.AddDrawing = function(oDrawing)
 	{
@@ -5504,7 +5510,7 @@
 	 * Select a run.
 	 * @memberof ApiRun
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} 
+	 * @return {boolean} 
 	 */
 	ApiRun.prototype.Select = function()
 	{
@@ -6424,7 +6430,7 @@
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiStyle} oStyle - The style which will be applied to the current table.
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */
 	ApiTable.prototype.SetStyle = function(oStyle)
 	{
@@ -6689,7 +6695,7 @@
 	 * Select a table.
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE", "CSE", "CPE"]
-	 * @returns {bool}
+	 * @returns {boolean}
 	 */
 	ApiTable.prototype.Select = function()
 	{
@@ -6742,7 +6748,7 @@
      * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
      * @param {String} sType - may be "left" or "center" or "right"
-     * @returns {bool} - returns false if param is invalid.
+     * @returns {boolean} - returns false if param is invalid.
      * */
     ApiTable.prototype.SetHAlign = function(sType)
     {
@@ -6773,7 +6779,7 @@
      * Sets vertical alignment for a table.
      * @typeofeditors ["CDE"]
      * @param {String} sType - may be "top" or "center" or "bottom"
-     * @returns {bool} - returns false if param is invalid.
+     * @returns {boolean} - returns false if param is invalid.
      * */
     ApiTable.prototype.SetVAlign = function(sType)
     {
@@ -6799,7 +6805,7 @@
 	 * @param {Number} nTop 
 	 * @param {Number} nRight 
 	 * @param {Number} nBottom  
-     * @returns {bool} - returns true.
+     * @returns {boolean} - returns true.
      * */
     ApiTable.prototype.SetPaddings = function(nLeft, nTop, nRight, nBottom)
     {
@@ -6814,8 +6820,8 @@
      * Set table wrapping style
      * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
-     * @param {bool} isFlow
-	 * @returns {bool} - returns false if param is invalid. 
+     * @param {boolean} isFlow
+	 * @returns {boolean} - returns false if param is invalid. 
      * */
     ApiTable.prototype.SetWrappingStyle = function(isFlow)
     {
@@ -7045,7 +7051,7 @@
 	 * Deletes the table. 
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} - returns false if parent of table doesn't exist.
+	 * @return {boolean} - returns false if parent of table doesn't exist.
 	 */
 	ApiTable.prototype.Delete = function()
 	{
@@ -7065,7 +7071,7 @@
 	 * Clears the content of the table.
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} - returns true.
+	 * @return {boolean} - returns true.
 	 */
 	ApiTable.prototype.Clear = function()
 	{
@@ -7085,7 +7091,7 @@
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiTable.prototype.Search = function(sText, isMatchCase)
@@ -7113,7 +7119,7 @@
 	 * @memberof ApiTable
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiTextPr} oTextPr
-	 * @return {bool} - returns true. 
+	 * @return {boolean} - returns true. 
 	 */
 	ApiTable.prototype.SetTextPr = function(oTextPr)
 	{
@@ -7281,7 +7287,7 @@
 	 * Clears the content of row.
 	 * @memberof ApiTableRow
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} - returns false if parent table doesn't exist.
+	 * @returns {boolean} - returns false if parent table doesn't exist.
 	 */
 	ApiTableRow.prototype.Clear = function()
 	{
@@ -7315,7 +7321,7 @@
 	 * Remove the table row.
 	 * @memberof ApiTableRow
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} - return false if parent table doesn't exist.
+	 * @returns {boolean} - return false if parent table doesn't exist.
 	 */
 	ApiTableRow.prototype.Remove = function()
 	{
@@ -7333,7 +7339,7 @@
 	 * @memberof ApiTableRow
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiTextPr} oTextPr
-	 * @returns {bool} - returns false if parent table doesn't exist or param is invalid.
+	 * @returns {boolean} - returns false if parent table doesn't exist or param is invalid.
 	 */
 	ApiTableRow.prototype.SetTextPr = function(oTextPr)
 	{
@@ -7370,7 +7376,7 @@
 	 * @memberof ApiTableRow
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiTableRow.prototype.Search = function(sText, isMatchCase)
@@ -7557,7 +7563,7 @@
 	 * @memberof ApiTableCell
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiTableCell.prototype.Search = function(sText, isMatchCase)
@@ -7630,7 +7636,7 @@
 	 * @memberof ApiTableCell
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiTableCellPr} oApiTableCellPr 
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */
 	ApiTableCell.prototype.SetCellPr = function(oApiTableCellPr)
 	{
@@ -7647,7 +7653,7 @@
 	 * @memberof ApiTableCell
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiTextPr} oTextPr
-	 * @return {bool} - returns false if param is invalid.
+	 * @return {boolean} - returns false if param is invalid.
 	 */
 	ApiTableCell.prototype.SetTextPr = function(oTextPr)
 	{
@@ -7671,7 +7677,7 @@
 	 * Clears the content of the cell.
 	 * @memberof ApiTableCell
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} - returns false if parent row is invalid.
+	 * @return {boolean} - returns false if parent row is invalid.
 	 */
 	ApiTableCell.prototype.Clear = function()
 	{
@@ -7692,7 +7698,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {number} nPos - The position where the current element will be added.
 	 * @param {DocumentElement} oElement - The document element which will be added at the current position.
-	 * @returns {bool} - returns false if oElement is invalid.
+	 * @returns {boolean} - returns false if oElement is invalid.
 	 */
 	ApiTableCell.prototype.AddElement = function(nPos, oElement)
 	{
@@ -9846,7 +9852,7 @@
 	/**
 	 * Deletes the graphic object. 
 	 * @typeofeditors ["CDE"]
-	 * @return {bool} - returns false if drawing object haven't parent.
+	 * @return {boolean} - returns false if drawing object haven't parent.
 	 */
 	ApiDrawing.prototype.Delete = function()
 	{
@@ -9928,7 +9934,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {string | ApiParagraph} paragraph - text or paragraph
 	 * @param {string} sPosition - can be "after" or "before"
-	 * @param {bool} beRNewPara - if "true" - returns new paragraph, else returns this ApiDrawing.
+	 * @param {boolean} beRNewPara - if "true" - returns new paragraph, else returns this ApiDrawing.
 	 * @return {ApiParagraph | ApiDrawing} - returns null if parent paragraph doesn't exist.
 	 */
 	ApiDrawing.prototype.InsertParagraph = function(paragraph, sPosition, beRNewPara)
@@ -9964,7 +9970,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {number}	breakType - 0 -> page break, 1 -> line break.
 	 * @param {string}	position  - can bet "after" or "before" 
-	 * @returns {bool}  - returns false if drawing object haven't parent run or params are invalid.
+	 * @returns {boolean}  - returns false if drawing object haven't parent run or params are invalid.
 	 */	
 	ApiDrawing.prototype.AddBreak = function(breakType, position)
 	{
@@ -9994,7 +10000,7 @@
 	 * Horizontal Reflection.
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} bFlip 
+	 * @param {boolean} bFlip 
 	 */	
 	ApiDrawing.prototype.SetHorFlip = function(bFlip)
 	{
@@ -10005,8 +10011,8 @@
 	 * Vertical reflection.
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} bFlip 
-	 * @returns {bool} - returns false if param is invalid.
+	 * @param {boolean} bFlip 
+	 * @returns {boolean} - returns false if param is invalid.
 	 */	
 	ApiDrawing.prototype.SetVertFlip = function(bFlip)
 	{
@@ -10023,7 +10029,7 @@
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
 	 * @param {number} coefficient 
-	 * @returns {bool} - return false if param is invalid.
+	 * @returns {boolean} - return false if param is invalid.
 	 */	
 	ApiDrawing.prototype.ScaleHeight = function(coefficient)
 	{
@@ -10045,7 +10051,7 @@
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
 	 * @param {number} coefficient
-	 * @returns {bool} - return false if param is invali.
+	 * @returns {boolean} - return false if param is invali.
 	 */	
 	ApiDrawing.prototype.ScaleWidth = function(coefficient)
 	{
@@ -10067,7 +10073,7 @@
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiFill} oFill
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */	
 	ApiDrawing.prototype.Fill = function(oFill)
 	{
@@ -10082,7 +10088,7 @@
 	 * @memberof ApiDrawing
 	 * @typeofeditors ["CDE"]
 	 * @param {ApiStroke} oStroke
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */	
 	ApiDrawing.prototype.SetOutLine = function(oStroke)
 	{
@@ -10445,7 +10451,7 @@
 	 * Specifies a  vertical axis orientation
 	 * @memberof ApiChart
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} bIsMinMax
+	 * @param {boolean} bIsMinMax
 	 * */
 	ApiChart.prototype.SetVerAxisOrientation = function(bIsMinMax){
 		AscFormat.builder_SetChartVertAxisOrientation(this.Chart, bIsMinMax);
@@ -10455,7 +10461,7 @@
 	 * Specifies a  horizontal axis orientation
 	 * @memberof ApiChart
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} bIsMinMax
+	 * @param {boolean} bIsMinMax
 	 * */
 	ApiChart.prototype.SetHorAxisOrientation = function(bIsMinMax){
 		AscFormat.builder_SetChartHorAxisOrientation(this.Chart, bIsMinMax);
@@ -11050,7 +11056,7 @@
 	 * Remove all the elements from the current inline text content control.
 	 * @memberof ApiInlineLvlSdt
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} - returns false if control haven't elements.
+	 * @returns {boolean} - returns false if control haven't elements.
 	 */
 	ApiInlineLvlSdt.prototype.RemoveAllElements = function()
 	{
@@ -11071,7 +11077,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {ParagraphContent} oElement - The document element which will be added at the position specified. Returns **false** if the type of *oElement* is not supported by an inline text content control.
 	 * @param {number} [nPos] - The position of the element where it will be added to the current inline text content control. If this value is not specified then the element will be added to the end of the current inline text content control.
-	 * @returns {bool} - returns false if oElement unsupported.
+	 * @returns {boolean} - returns false if oElement unsupported.
 	 */
 	ApiInlineLvlSdt.prototype.AddElement = function(oElement, nPos)
 	{
@@ -11097,7 +11103,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {number} nPos - The position where the current element will be added.
 	 * @param {DocumentElement} oElement - The document element which will be added at the current position.
-	 * @returns {bool} - returns false if oElement unsupported.
+	 * @returns {boolean} - returns false if oElement unsupported.
 	 */
 	ApiInlineLvlSdt.prototype.Push = function(oElement)
 	{
@@ -11122,7 +11128,7 @@
 	 * @memberof ApiInlineLvlSdt
 	 * @typeofeditors ["CDE"]
 	 * @param {String} sText - The text which will be add to the content control.
-	 * @returns {bool} - returns false if param is invalid.
+	 * @returns {boolean} - returns false if param is invalid.
 	 */
 	ApiInlineLvlSdt.prototype.AddText = function(sText)
 	{
@@ -11142,8 +11148,8 @@
 	 * Removes content control and content. If keepContent is true, the content is not deleted.
 	 * @memberof ApiInlineLvlSdt
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} keepContent
-	 * @returns {bool} - returns false if control haven't parent paragraph.
+	 * @param {boolean} keepContent
+	 * @returns {boolean} - returns false if control haven't parent paragraph.
 	 */
 	ApiInlineLvlSdt.prototype.Delete = function(keepContent)
 	{
@@ -11496,7 +11502,7 @@
 	 * Clears the contents of a content control.
 	 * @memberof ApiBlockLvlSdt
 	 * @typeofeditors ["CDE"]
-	 * @returns {bool} - returns true.
+	 * @returns {boolean} - returns true.
 	 */
 	ApiBlockLvlSdt.prototype.RemoveAllElements = function()
 	{
@@ -11509,8 +11515,8 @@
 	 * Removes content control and content. If keepContent is true, the content is not deleted.
 	 * @memberof ApiBlockLvlSdt
 	 * @typeofeditors ["CDE"]
-	 * @param {bool} keepContent
-	 * @returns {bool} - returns false if content control haven't parent.
+	 * @param {boolean} keepContent
+	 * @returns {boolean} - returns false if content control haven't parent.
 	 */
 	ApiBlockLvlSdt.prototype.Delete = function(keepContent)
 	{
@@ -11628,7 +11634,7 @@
 	 * @memberof ApiBlockLvlSdt
 	 * @typeofeditors ["CDE"]
 	 * @param {DocumentElement} oElement - The type of the element which will be pushed to the document.
-	 * @return {bool} - returns false if oElement unsupported.
+	 * @return {boolean} - returns false if oElement unsupported.
 	 */
 	ApiBlockLvlSdt.prototype.Push = function(oElement)
 	{
@@ -11653,7 +11659,7 @@
 	 * @typeofeditors ["CDE"]
 	 * @param {DocumentElement} oElement - The type of the element which will be pushed to the document.
 	 * @param {Number} nPos - The specified position.
-	 * @return {bool} - returns false if oElement unsupported.
+	 * @return {boolean} - returns false if oElement unsupported.
 	 */
 	ApiBlockLvlSdt.prototype.AddElement = function(oElement, nPos)
 	{
@@ -11677,7 +11683,7 @@
 	 * @memberof ApiBlockLvlSdt
 	 * @typeofeditors ["CDE"]
 	 * @param {String} sText - The text which will be add to the content control.
-	 * @return {bool} - returns false if param is invalid.
+	 * @return {boolean} - returns false if param is invalid.
 	 */
 	ApiBlockLvlSdt.prototype.AddText = function(sText)
 	{
@@ -11713,7 +11719,7 @@
 	 * @memberof ApiBlockLvlSdt
 	 * @typeofeditors ["CDE"]
 	 * @param {string} sText 
-	 * @param {bool} isMatchCase - is case sensitive. 
+	 * @param {boolean} isMatchCase - is case sensitive. 
 	 * @return {ApiRange[]}  
 	 */
 	ApiBlockLvlSdt.prototype.Search = function(sText, isMatchCase)
@@ -13153,7 +13159,7 @@
 	Api.prototype.private_CreateApiDocContent = function(oDocContent){
 		return new ApiDocumentContent(oDocContent);
 	};
-}(window, null));
+
 
 
 

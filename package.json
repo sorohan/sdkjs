@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "generate-types": "tsc && sh ./scripts/fix-types.sh"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  }
+}
