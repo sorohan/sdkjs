@@ -98,7 +98,7 @@
 
 	/**
 	 * @typedef {Object} Config
-	 * @property {string} basePath="" Path to the plugin. All the other paths are calculated relative to this path. In case the plugin is installed on the server, an additional parameter (path to the plugins) is added there. If baseUrl == "" the path to all plugins will be used.
+	 * @property {string} baseUrl="" Path to the plugin. All the other paths are calculated relative to this path. In case the plugin is installed on the server, an additional parameter (path to the plugins) is added there. If baseUrl == "" the path to all plugins will be used.
 	 * @property {string} guid Plugin identifier. It <b>must<b> be of the asc.{UUID} type.
 	 * @property {string} [minVersion] The minimum supported editors version.
 	 *
