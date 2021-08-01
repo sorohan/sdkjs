@@ -1,8 +1,10 @@
 {
   "scripts": {
-    "generate-types": "tsc && sh ./scripts/fix-types.sh"
+    "generate-types": "tsc && sh ./scripts/fix-types.sh",
+    "generate-schemas": "typescript-json-schema dist/common/plugins/plugin_base_api.d.ts Config -o dist/config-schema.json"
   },
   "devDependencies": {
-    "typescript": "^4.3.5"
+    "typescript": "^4.3.5",
+    "typescript-json-schema": "^0.50.1"
   }
 }
